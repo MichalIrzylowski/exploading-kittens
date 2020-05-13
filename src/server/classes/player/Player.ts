@@ -9,5 +9,9 @@ export class Player implements IPlayer {
     this.data = new PlayerIdentification(playerId);
   }
 
+  getIdentification() {
+    return this.data;
+  }
+
   data: PlayerIdentification;
 }
