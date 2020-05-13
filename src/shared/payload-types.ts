@@ -1,1 +1,3 @@
-export const createBoard = 'create-board';
+export enum payloadTypes {
+  createBoard = 'create-board',
+}

@@ -1,18 +1,24 @@
 import { Player } from '@server/classes/player';
-import { Card } from '@server/classes/card';
-import { prepareDeck } from '@server/helpers/prepare-deck';
+import { Deck } from '@server/classes/deck';
 
 interface IBoard {
+  id: string;
   players: Player[];
-  deck: Card[];
+  deck: Deck;
 }
 
 export class Board implements IBoard {
-  constructor() {
+  constructor(id: string) {
+    this.id = id;
     this.players = [];
-    this.deck = prepareDeck();
+    this.deck = new Deck();
   }
 
+  addPlayer(player: Player) {
+    this.players.push(player);
+  }
+
+  id: string;
   players: Player[];
-  deck: Card[];
+  deck: Deck;
 }
