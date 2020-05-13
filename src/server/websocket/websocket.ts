@@ -6,6 +6,7 @@ import { Player } from '@server/classes/player';
 
 import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
+import { createMessage } from '@shared/helpers/create-message';
 
 const boards = new Map();
 const players = new Map();
@@ -20,6 +21,8 @@ export const connection = (socket: WebSocket) => {
         playerId,
         new Player({ id: playerId, name: 'Zenek' }, socket)
       );
+
+      socket.send(createMessage(payloadTypes.createBoard, 'hello'));
 
       Array.from(players.keys()).forEach((player) => {
         players.get(player).socket.send('hello');

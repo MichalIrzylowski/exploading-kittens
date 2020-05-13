@@ -1,10 +1,13 @@
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const webpack = require('webpack');
 
 const buildPath = './src/public/';
 const htmlTemplate = './templates/index.html';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 export default {
   entry: './src/front/index.tsx',
@@ -20,15 +23,15 @@ export default {
         use: 'ts-loader',
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /.scss$/,
         use: [
-          'style-loader',
+          { loader: 'style-loader' },
+          { loader: 'css-modules-typescript-loader' },
           {
             loader: 'css-loader',
-            options: { localsConvention: 'camelCaseOnly', modules: true },
+            options: { modules: true },
           },
-          'sass-loader',
-          'typings-for-css-modules-loader',
+          { loader: 'sass-loader' },
         ],
       },
     ],
@@ -44,6 +47,8 @@ export default {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       '@front': path.resolve(__dirname, './src/front/'),
+      '@server': path.resolve(__dirname, './src/server'),
+      '@shared': path.resolve(__dirname, './src/shared'),
     },
   },
   plugins: [
