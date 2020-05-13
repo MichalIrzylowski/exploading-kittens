@@ -34,6 +34,4 @@ export const connection = (socket: WebSocket) => {
       socket.emit(customEvents.boardCreated);
     }
   });
-
-  socket.send(JSON.stringify({ id: uuid() }));
 };
