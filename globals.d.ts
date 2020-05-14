@@ -1,5 +1,4 @@
-declare module 'typography-theme-funston';
-declare module 'typography-inject-fonts';
+declare module 'typography-theme-ocean-beach';
 
 declare module '*.svg' {
   const content: string;

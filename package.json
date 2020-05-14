@@ -38,6 +38,7 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "@types/react-helmet": "^6.0.0",
     "@types/typography": "^0.16.3",
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
@@ -45,10 +46,10 @@
     "express": "^4.17.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-helmet": "^6.0.0",
     "react-router-dom": "^5.2.0",
     "typography": "^0.16.19",
-    "typography-inject-fonts": "0.0.0",
-    "typography-theme-funston": "^0.16.19",
+    "typography-theme-ocean-beach": "^0.16.19",
     "uuid": "^8.0.0",
     "ws": "^7.3.0"
   }

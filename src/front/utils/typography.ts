@@ -1,4 +1,4 @@
 import Typography from 'typography';
-import funstonTheme from 'typography-theme-funston';
+import oceanBeachTheme from 'typography-theme-ocean-beach';
 
-export const typography = new Typography(funstonTheme);
+export const typography = new Typography(oceanBeachTheme);

@@ -6,6 +6,7 @@ import { WebsocketProvider, useWebsocket } from '@front/contexts/websocket';
 import { payloadTypes } from '@shared/payload-types';
 
 import { PageMenu } from '@front/components/page-menu';
+import { Head } from '@front/components/head';
 
 import './main.scss';
 
@@ -17,8 +18,11 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <WebsocketProvider>
+        <Head>
+          <title>Exploading kittends</title>
+        </Head>
         <PageMenu />
-        <div>Hello</div>
+        <p>Hello</p>
         <button onClick={handleClick}>send message</button>
       </WebsocketProvider>
     </BrowserRouter>
