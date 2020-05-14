@@ -5,8 +5,11 @@ import { Link } from 'react-router-dom';
 import { MyLink } from '@front/components/my-link';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
 import { Svg } from '@front/components/svg';
+import * as links from '@front/links';
+
 import github from '@front/images/svg/github.svg';
-import linkedIn from '@front/images/linkedin.svg';
+import linkedIn from '@front/images/svg/linkedin.svg';
+import website from '@front/images/svg/globe.svg';
 
 import css from './page-menu.scss';
 
@@ -20,14 +23,28 @@ export const PageMenu = () => {
   return (
     <nav className={css.menu}>
       <LayoutWrapper className={css.wrapper}>
-        <h3>
-          <Link to="/">Exploading kittends</Link>
+        <h3 className={css.logo}>
+          <Link to="/">
+            <span className={css.exploading}>Exploading</span> kittens
+          </Link>
         </h3>
-        <MyLink href="https://github.com/MichalIrzylowski">
-          <Svg className={css.icon} {...iconSize}>
-            {github}
-          </Svg>
-        </MyLink>
+        <div className={css.outLinks}>
+          <MyLink href={links.mySite}>
+            <Svg className={css.icon} {...iconSize}>
+              {website}
+            </Svg>
+          </MyLink>
+          <MyLink href={links.linkedin}>
+            <Svg className={css.icon} {...iconSize}>
+              {linkedIn}
+            </Svg>
+          </MyLink>
+          <MyLink href={links.github}>
+            <Svg className={css.icon} {...iconSize}>
+              {github}
+            </Svg>
+          </MyLink>
+        </div>
       </LayoutWrapper>
     </nav>
   );

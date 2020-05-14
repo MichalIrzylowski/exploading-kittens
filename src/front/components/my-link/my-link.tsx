@@ -4,6 +4,6 @@ interface IBlankLink {
   href: string;
 }
 
-export const MyLink: React.FC<IBlankLink> = ({ href, ...restProps }) => (
-  <a target="_blank" {...restProps} />
+export const MyLink: React.FC<IBlankLink> = (props) => (
+  <a target="_blank" {...props} />
 );
