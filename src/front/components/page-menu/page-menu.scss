@@ -1,0 +1,26 @@
+@import '../../shared/styles/variables.scss';
+
+.menu {
+  width: 100%;
+  background-color: $black;
+  padding: 20px 0 1px 0;
+  border-radius: 0 0 5px 5px;
+  color: $white;
+
+  a,
+  a:hover {
+    text-decoration: none;
+    color: $white;
+  }
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon {
+  path {
+    fill: $white;
+  }
+}

@@ -1,0 +1,24 @@
+@import '../../shared/styles/media-queries.scss';
+@import '../../shared/styles/variables.scss';
+
+.wrapper {
+  margin: 0 auto;
+  padding: 0 10px;
+  height: auto;
+
+  @include media(sm) {
+    max-width: $sm;
+  }
+
+  @include media(md) {
+    max-width: $md;
+  }
+
+  @include media(lg) {
+    max-width: $lg;
+  }
+
+  @include media(xl) {
+    max-width: $xl;
+  }
+}

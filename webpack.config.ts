@@ -25,14 +25,18 @@ export default {
       {
         test: /.scss$/,
         use: [
-          { loader: 'style-loader' },
-          { loader: 'css-modules-typescript-loader' },
+          'style-loader',
+          'css-modules-typescript-loader',
           {
             loader: 'css-loader',
             options: { modules: true },
           },
-          { loader: 'sass-loader' },
+          'sass-loader',
         ],
+      },
+      {
+        test: /\.svg$/,
+        use: ['svg-inline-loader'],
       },
     ],
   },
