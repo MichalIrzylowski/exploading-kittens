@@ -2,6 +2,7 @@ import React from 'react';
 
 import { LayoutWrapper } from '@front/components/layout-wrapper';
 import { useWebsocket } from '@front/contexts/websocket';
+import { Paper } from '@front/components/paper';
 
 export const MainPage = () => {
   const ws = useWebsocket();
@@ -24,6 +25,7 @@ export const MainPage = () => {
             <br /> and sometimes goats
           </h2>
         </header>
+        <Paper>Paper here</Paper>
       </LayoutWrapper>
     </main>
   );

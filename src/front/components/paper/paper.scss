@@ -1,0 +1,8 @@
+@import '../../shared/styles/variables.scss';
+
+.paper {
+  width: 100%;
+  border: 1px solid $gray;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
