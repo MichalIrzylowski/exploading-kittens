@@ -1,6 +1,7 @@
 import EventEmitter from 'eventemitter3';
 import { createMessage } from '@shared/helpers/create-message';
 import { payloadTypes } from '@shared/payload-types';
+import { customEvents } from '@shared/events';
 
 interface IReconnectingWebsocket {
   url: string;
@@ -15,7 +16,7 @@ export class ReconnectingWebsocket extends EventEmitter
   constructor(url: string) {
     super();
     this.url = url;
-    this.emit('close');
+    // this.emit(customEvents.close);
   }
 
   _connect() {
@@ -26,12 +27,12 @@ export class ReconnectingWebsocket extends EventEmitter
   }
 
   onOpenConnection = () => {
-    this.emit('open');
+    this.emit(customEvents.open);
     console.log('connected');
   };
 
   reconnect = () => {
-    this.emit('close');
+    this.emit(customEvents.close);
     timeout = setTimeout(() => {
       this._connect();
     }, second);

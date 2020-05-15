@@ -1,0 +1,49 @@
+@import '../../shared/styles/variables.scss';
+
+$dots-size: 15px;
+
+.browser-panel {
+  height: 40px;
+  background-color: $gray;
+  display: flex;
+  align-items: center;
+}
+
+.red {
+  background-color: $red;
+}
+
+.yellow {
+  background-color: $yellow;
+}
+
+.green {
+  background-color: $green;
+}
+
+.red,
+.yellow,
+.green {
+  border-radius: 50%;
+  height: $dots-size;
+  width: $dots-size;
+}
+
+.dots-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 55px;
+  margin-left: 20px;
+}
+
+.browser-address {
+  border-radius: $radius;
+  width: 80%;
+  height: 30px;
+  background-color: $white;
+  margin-left: 20px;
+}
+
+.link {
+  margin-left: 10px;
+}
