@@ -1,28 +1,27 @@
 import React from 'react';
 
 import { LayoutWrapper } from '@front/components/layout-wrapper';
-import { useWebsocket } from '@front/contexts/websocket';
 import { Paper } from '@front/components/paper';
 
-export const MainPage = () => {
-  const ws = useWebsocket();
+import { translate } from '@front/utils/translate';
 
-  ws.on('open', () => {
-    console.log('Hello connection is open');
-  });
+import * as localizations from './resources/localizations';
+
+export const MainPage = () => {
+  const translations = translate(localizations);
   return (
     <main>
       <LayoutWrapper>
         <header>
-          <h1>Exploading kittens</h1>
+          <h1>{translations.exploadingKittens}</h1>
           <h2>
-            A card game
+            {translations.cardGame}
             <br />
-            for people who are into
+            {translations.forPeople}
             <br />
-            kittens and explosions
-            <br /> and laster beams
-            <br /> and sometimes goats
+            {translations.catsAndExplosions}
+            <br /> {translations.laserBeams}
+            <br /> {translations.goats}
           </h2>
         </header>
         <Paper>Paper here</Paper>
