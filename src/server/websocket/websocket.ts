@@ -3,9 +3,9 @@ import { v4 as uuid } from 'uuid';
 
 import { Board } from '@server/classes/board';
 import { Player } from '@server/classes/player';
+import { sendBoards } from '@server/utils/send-boards';
 
 import { payloadTypes } from '@shared/payload-types';
-import { customEvents } from '@shared/events';
 import { createMessage } from '@shared/helpers/create-message';
 
 export const boards = new Map<string, Board>();
@@ -20,16 +20,10 @@ fakeBoards.forEach((boardId) => {
 const fakeNames = ['Marian', 'Zenek', 'Miłosz', 'Tobiasz', 'Borys'];
 
 export const connection = (socket: WebSocket) => {
-  socket.send(
-    createMessage(payloadTypes.currentBoards, {
-      boards: Array.from(boards.keys()),
-    })
-  );
+  sendBoards(socket, boards);
 
   socket.on('message', (data) => {
     const message = JSON.parse(data as any);
-
-    console.log(message);
 
     switch (message.type) {
       case payloadTypes.registerUser:
@@ -52,11 +46,7 @@ export const connection = (socket: WebSocket) => {
         break;
 
       case payloadTypes.refreshBoards:
-        socket.send(
-          createMessage(payloadTypes.currentBoards, {
-            boards: Array.from(boards.keys()),
-          })
-        );
+        sendBoards(socket, boards);
         break;
 
       default:

@@ -14,19 +14,19 @@ import {
   cardNames,
 } from '@server/classes/card';
 
-export const prepareDeck = () => {
-  const names = {
-    attack: Object.keys(attackNames),
-    exploading: Object.keys(exploadingNames),
-    cats: Object.keys(catsNames),
-    diffuse: Object.keys(diffuseNames),
-    favor: Object.keys(favorNames),
-    nope: Object.keys(nopeNames),
-    seeTheFuture: Object.keys(seeTheFutureNames),
-    shuffle: Object.keys(shuffleNames),
-    skip: Object.keys(skipNames),
-  };
+const names = {
+  attack: Object.keys(attackNames),
+  exploading: Object.keys(exploadingNames),
+  cats: Object.keys(catsNames),
+  diffuse: Object.keys(diffuseNames),
+  favor: Object.keys(favorNames),
+  nope: Object.keys(nopeNames),
+  seeTheFuture: Object.keys(seeTheFutureNames),
+  shuffle: Object.keys(shuffleNames),
+  skip: Object.keys(skipNames),
+};
 
+export const prepareDeck = () => {
   const deck: Card[] = [];
 
   const types = Object.keys(names);

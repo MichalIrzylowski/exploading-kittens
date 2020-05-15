@@ -12,16 +12,12 @@ import css from './games.scss';
 
 export const Games = () => {
   const ws = useWebsocket();
-  const [games, setGames] = useState<string[]>([]);
+  const [games, setGames] = useState<TBoard[]>([]);
   const translations = translate(localizations);
 
-  ws.on(payloadTypes.currentBoards, (data) => {
-    setGames(data.boards);
-  });
+  ws.on(payloadTypes.currentBoards, (boards) => setGames(boards));
 
-  const handleClick = () => {
-    ws.send(payloadTypes.refreshBoards);
-  };
+  const handleClick = () => ws.send(payloadTypes.refreshBoards);
 
   return (
     <div>

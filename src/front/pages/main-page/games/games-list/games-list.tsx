@@ -1,13 +1,18 @@
 import React from 'react';
 
+import { List } from '@front/components/list';
+
 interface IGamesList {
-  games: string[];
+  games: TBoard[];
 }
 
 export const GamesList: React.FC<IGamesList> = ({ games }) => (
-  <ul>
-    {games.map((game) => (
-      <li key={game}>{game}</li>
+  <List type="ul">
+    {games.map(({ id, players }) => (
+      <li key={id}>
+        {id}
+        {players}
+      </li>
     ))}
-  </ul>
+  </List>
 );
