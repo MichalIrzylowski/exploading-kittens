@@ -1,16 +1,16 @@
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const webpack = require('webpack');
+import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import path from 'path';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import webpack from 'webpack';
 
 const buildPath = './src/public/';
 const htmlTemplate = './templates/index.html';
 
 export default {
-  mode: 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: [
-    'webpack-hot-middleware/client?path=/__webpack_hmr',
+    'webpack-hot-middleware/client?path=/__webpack_hmr', // this is needed for HMR
     './src/front/index.tsx',
   ],
   output: {

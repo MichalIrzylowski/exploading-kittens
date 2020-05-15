@@ -26,13 +26,13 @@ export class ReconnectingWebsocket extends EventEmitter
   }
 
   onOpenConnection = () => {
-    console.log('connect');
+    this.emit('open');
+    console.log('connected');
   };
 
   reconnect = () => {
+    this.emit('close');
     timeout = setTimeout(() => {
-      console.log('reconnecting');
-
       this._connect();
     }, second);
   };

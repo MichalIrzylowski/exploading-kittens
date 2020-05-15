@@ -1,8 +1,14 @@
 import React from 'react';
 
 import { LayoutWrapper } from '@front/components/layout-wrapper';
+import { useWebsocket } from '@front/contexts/websocket';
 
 export const MainPage = () => {
+  const ws = useWebsocket();
+
+  ws.on('open', () => {
+    console.log('Hello connection is open');
+  });
   return (
     <main>
       <LayoutWrapper>

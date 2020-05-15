@@ -35,6 +35,12 @@ if (process.env.NODE_ENV === 'development') {
       heartbeat: 10 * 1000,
     })
   );
+} else if (process.env.NODE_ENV === 'production') {
+  const compiler = webpack(webpackConfig as Configuration);
+
+  compiler.run((err, stats) => {
+    console.log('bundle  build');
+  });
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
