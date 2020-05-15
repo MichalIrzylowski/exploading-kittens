@@ -29,6 +29,8 @@ export const connection = (socket: WebSocket) => {
   socket.on('message', (data) => {
     const message = JSON.parse(data as any);
 
+    console.log(message);
+
     switch (message.type) {
       case payloadTypes.registerUser:
         let id = uuid();
@@ -36,15 +38,17 @@ export const connection = (socket: WebSocket) => {
         if (randomNumber < 1) {
           randomNumber = 1;
         }
-        const name = fakeNames[randomNumber];
+        let name = fakeNames[randomNumber];
+
+        let playerId = { id, name };
 
         if (message.payload) {
-          id = message.payload.id;
+          playerId = message.payload;
         }
 
-        const playerId = { id: message.payload.id, name };
+        players.set(playerId.id, new Player(playerId, socket));
 
-        players.set(id, new Player(playerId, socket));
+        socket.send(createMessage(payloadTypes.registerUser, playerId));
         break;
 
       case payloadTypes.refreshBoards:

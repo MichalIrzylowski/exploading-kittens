@@ -3,6 +3,8 @@ import { createMessage } from '@shared/helpers/create-message';
 import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
 
+import { localStorageItems } from '@front/shared/types';
+
 interface IReconnectingWebsocket {
   url: string;
   socket?: WebSocket;
@@ -16,7 +18,10 @@ export class ReconnectingWebsocket extends EventEmitter
   constructor(url: string) {
     super();
     this.url = url;
-    // this.emit(customEvents.close);
+
+    this.on(payloadTypes.registerUser, (data) => {
+      localStorage.setItem(localStorageItems.user, JSON.stringify(data));
+    });
   }
 
   _connect() {
@@ -27,12 +32,19 @@ export class ReconnectingWebsocket extends EventEmitter
     this.socket.addEventListener('message', ({ data }) => {
       const message = JSON.parse(data);
 
+      console.log('ReconnectingWebsocket._connect', data);
+
       this.emit(message.type, message.payload);
     });
   }
 
   onOpenConnection = () => {
     this.emit(customEvents.open);
+
+    let user = localStorage.getItem(localStorageItems.user);
+    if (user) user = JSON.parse(user);
+    this.send(payloadTypes.registerUser, user);
+
     console.log('connected');
   };
 
