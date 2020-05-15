@@ -14,7 +14,7 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <WebsocketProvider>
         <Head>
-          <title>Exploading kittends</title>
+          <title>Exploding kittens</title>
         </Head>
         <PageMenu />
         <MainPage />

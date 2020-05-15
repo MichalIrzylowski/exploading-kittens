@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { translate } from '@front/utils/translate';
-import * as localizations from '../resources/localizations';
+import * as localizations from './resources/localizations';
 
 export const Header = () => {
   const translations = translate(localizations);

@@ -24,6 +24,11 @@ export class ReconnectingWebsocket extends EventEmitter
 
     this.socket.addEventListener('open', this.onOpenConnection);
     this.socket.addEventListener('close', this.reconnect);
+    this.socket.addEventListener('message', ({ data }) => {
+      const message = JSON.parse(data);
+
+      this.emit(message.type, message.payload);
+    });
   }
 
   onOpenConnection = () => {
@@ -38,12 +43,8 @@ export class ReconnectingWebsocket extends EventEmitter
     }, second);
   };
 
-  send = (type: payloadTypes, payload: any) => {
+  send = (type: payloadTypes, payload?: any) => {
     this.socket?.send(createMessage(type, payload));
-  };
-
-  addEventListener = (...args: any[]) => {
-    this.addEventListener(args);
   };
 
   socket?: WebSocket;

@@ -10,7 +10,7 @@ $dots-size: 15px;
 }
 
 .red {
-  background-color: $red;
+  background-color: $light-red;
 }
 
 .yellow {
@@ -46,4 +46,15 @@ $dots-size: 15px;
 
 .link {
   margin-left: 10px;
+}
+
+.refresh {
+  cursor: pointer;
+  position: relative;
+  bottom: 6px;
+  margin-left: 20px;
+
+  path {
+    fill: $white;
+  }
 }

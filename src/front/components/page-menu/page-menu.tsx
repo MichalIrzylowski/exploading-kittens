@@ -7,9 +7,7 @@ import { LayoutWrapper } from '@front/components/layout-wrapper';
 import { Svg } from '@front/components/svg';
 import * as links from '@front/links';
 
-import github from '@front/images/svg/github.svg';
-import linkedIn from '@front/images/svg/linkedin.svg';
-import website from '@front/images/svg/globe.svg';
+import { github, linkedIn, website } from '@front/images/svg';
 
 import css from './page-menu.scss';
 

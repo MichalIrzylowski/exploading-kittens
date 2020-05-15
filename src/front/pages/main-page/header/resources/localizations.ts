@@ -1,7 +1,7 @@
 import { TranslationToken } from '@front/utils/translate';
 
 export const exploadingKittens: TranslationToken = {
-  'en-US': 'Exploading kittens',
+  'en-US': 'Exploding kittens',
   'pl-PL': 'Wybuchające kotki',
 };
 

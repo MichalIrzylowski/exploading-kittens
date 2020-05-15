@@ -10,6 +10,7 @@ interface CssExports {
   'green': string;
   'link': string;
   'red': string;
+  'refresh': string;
   'yellow': string;
 }
 export const cssExports: CssExports;

@@ -8,33 +8,36 @@ import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
 import { createMessage } from '@shared/helpers/create-message';
 
-const boards = new Map();
-const players = new Map();
+const boards = new Map<string, Board>();
+const players = new Map<string, Player>();
+
+const fakeBoards = [uuid(), uuid(), uuid()];
+
+fakeBoards.forEach((board) => {
+  boards.set(board, new Board(board));
+});
 
 export const connection = (socket: WebSocket) => {
+  socket.send(
+    createMessage(payloadTypes.currentBoards, {
+      boards: Array.from(boards.keys()),
+    })
+  );
+
   socket.on('message', (data) => {
-    const payload = JSON.parse(data as any);
+    const message = JSON.parse(data as any);
 
-    if (payload.type === payloadTypes.registerUser) {
-      const playerId = uuid();
-      players.set(
-        playerId,
-        new Player({ id: playerId, name: 'Zenek' }, socket)
-      );
+    switch (message.type) {
+      case payloadTypes.refreshBoards:
+        socket.send(
+          createMessage(payloadTypes.currentBoards, {
+            boards: Array.from(boards.keys()),
+          })
+        );
+        break;
 
-      socket.send(createMessage(payloadTypes.createBoard, 'hello'));
-
-      Array.from(players.keys()).forEach((player) => {
-        players.get(player).socket.send('hello');
-      });
-    }
-
-    if (payload.type === payloadTypes.createBoard) {
-      const boardId = uuid();
-
-      boards.set(boardId, new Board(boardId));
-
-      socket.emit(customEvents.boardCreated);
+      default:
+        throw new Error(`Unhandled message: ${message.type}`);
     }
   });
 };
