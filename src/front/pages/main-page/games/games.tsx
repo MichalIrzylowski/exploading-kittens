@@ -6,6 +6,7 @@ import { BrowserPaper } from '@front/components/browser-paper';
 
 import { payloadTypes } from '@shared/payload-types';
 
+import { GamesList } from './games-list/';
 import * as localizations from './resources/localizations';
 import css from './games.scss';
 
@@ -15,7 +16,6 @@ export const Games = () => {
   const translations = translate(localizations);
 
   ws.on(payloadTypes.currentBoards, (data) => {
-    console.log('boards');
     setGames(data.boards);
   });
 
@@ -30,7 +30,9 @@ export const Games = () => {
         addressHref="https://explodingkittens.com/"
         onRefreshButtonClick={handleClick}
       >
-        <div className={css.gamesListWrapper}>{games}</div>
+        <div className={css.gamesListWrapper}>
+          <GamesList games={games} />
+        </div>
       </BrowserPaper>
     </div>
   );
