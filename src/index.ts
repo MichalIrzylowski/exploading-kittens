@@ -5,10 +5,13 @@ import path from 'path';
 
 import express from 'express';
 import WebSocket from 'ws';
-import webpack from 'webpack';
-import webpackConfig from '../webpack.config';
+import webpack, { Configuration } from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { connection } from '@server/websocket';
+
+import webpackConfig from '../webpack.config';
 
 const app = express();
 const server = http.createServer(app);
@@ -18,21 +21,19 @@ const PORT = 3000;
 const wss = new WebSocket.Server({ server });
 
 if (process.env.NODE_ENV === 'development') {
-  const compiler = webpack(webpackConfig);
+  const compiler = webpack(webpackConfig as Configuration);
 
-  // compiler.run((err, stats) => {
-  //   if (err) console.error(err);
-  //   stats.toJson('minimal');
-  // });
-  compiler.watch(
-    {
-      aggregateTimeout: 1000,
-      poll: undefined,
-    },
-    (err, stats) => {
-      if (err) console.error(err);
-      stats.toJson('minimal');
-    }
+  app.use(
+    webpackDevMiddleware(compiler, {
+      publicPath: webpackConfig.output.publicPath,
+    })
+  );
+  app.use(
+    webpackHotMiddleware(compiler, {
+      log: console.log,
+      path: '/__webpack_hmr',
+      heartbeat: 10 * 1000,
+    })
   );
 }
 

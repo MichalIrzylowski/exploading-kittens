@@ -1,19 +1,22 @@
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const webpack = require('webpack');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 const buildPath = './src/public/';
 const htmlTemplate = './templates/index.html';
 
-const isDevelopment = process.env.NODE_ENV === 'development';
-
 export default {
-  entry: './src/front/index.tsx',
+  mode: 'development',
+  entry: [
+    'webpack-hot-middleware/client?path=/__webpack_hmr',
+    './src/front/index.tsx',
+  ],
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, buildPath),
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -43,13 +46,13 @@ export default {
       },
     ],
   },
-  // devServer: {
-  //   contentBase: buildPath,
-  //   historyApiFallback: true,
-  //   hot: true,
-  //   overlay: true,
-  //   quiet: true,
-  // },
+  devServer: {
+    contentBase: buildPath,
+    historyApiFallback: true,
+    hot: true,
+    overlay: true,
+    quiet: true,
+  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
@@ -59,8 +62,9 @@ export default {
     },
   },
   plugins: [
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new FriendlyErrorsWebpackPlugin(),
     new HtmlWebpackPlugin({ template: htmlTemplate }),
-    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
   ],
 };
