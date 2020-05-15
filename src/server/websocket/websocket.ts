@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { Board } from '@server/classes/board';
 import { Player } from '@server/classes/player';
 import { sendBoards } from '@server/utils/send-boards';
+import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
 
 import { payloadTypes } from '@shared/payload-types';
 import { createMessage } from '@shared/helpers/create-message';
@@ -49,8 +50,21 @@ export const connection = (socket: WebSocket) => {
         sendBoards(socket, boards);
         break;
 
+      case payloadTypes.createGame:
+        const boardId = uuid();
+        boards.set(boardId, new Board(boardId));
+
+        broadCastToAllUsers(players, {
+          type: payloadTypes.createGame,
+          payload: {
+            id: boardId,
+            players: boards.get(boardId)?.players.length,
+            name: boardId,
+          },
+        });
+
       default:
-        throw new Error(`Unhandled message: ${message.type}`);
+        console.error(`Unhandled message: ${message.type}`);
     }
   });
 };

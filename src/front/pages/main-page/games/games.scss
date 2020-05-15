@@ -1,3 +1,14 @@
 .games-list-wrapper {
   padding: 20px;
 }
+
+.list-head {
+  display: flex;
+  justify-content: space-between;
+
+  h6 {
+    margin: 20px 0;
+    text-align: center;
+    flex: 1;
+  }
+}

@@ -1,0 +1,12 @@
+@import '../../shared/styles/variables.scss';
+
+.list-item {
+  border-bottom: 1px solid $gray;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
