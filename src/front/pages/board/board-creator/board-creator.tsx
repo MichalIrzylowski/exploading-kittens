@@ -25,6 +25,7 @@ export const BoardCreator: React.FC<IBoardCreator> = ({ setNewBoard }) => {
 
   const handleBoardCreation = (id: string) => {
     setNewBoard(id);
+    localStorage.setItem(localStorageItems.currentGame, id);
   };
 
   useEffect(() => {

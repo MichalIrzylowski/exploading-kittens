@@ -28,6 +28,7 @@ export const gameConnection = (socket: WebSocket) => {
           break;
         }
 
+        player.isPlaying = boardId;
         boards.set(boardId, new Board(boardId, player));
 
         socket.send(createMessage(payloadTypes.boardCreated, boardId));
@@ -40,6 +41,11 @@ export const gameConnection = (socket: WebSocket) => {
             name: boardId,
           },
         });
+        break;
+
+      case payloadTypes.leaveGame:
+        const { payload } = message;
+        boards.get(payload.boardId)?.removePlayer(payload.playerId);
         break;
 
       case payloadTypes.registerUser:

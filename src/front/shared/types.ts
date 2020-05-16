@@ -4,4 +4,5 @@ export interface IObject<T> {
 
 export enum localStorageItems {
   user = 'user',
+  currentGame = 'currentGame',
 }
