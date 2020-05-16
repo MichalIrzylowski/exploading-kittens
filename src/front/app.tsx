@@ -9,8 +9,9 @@ import { TopBar } from '@front/components/top-bar';
 
 import { MainPage } from '@front/pages/main-page';
 import { Guide } from '@front/pages/guide';
+import { Board } from '@front/pages/board';
 
-import { homePage, guide } from '@shared/urls';
+import { homePage, guide, board } from '@shared/urls';
 
 import './main.scss';
 
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
         <Switch>
           <Route exact path={homePage} component={MainPage} />
           <Route exact path={guide} component={Guide} />
+          <Route exact path={board} component={Board} />
         </Switch>
       </MainWebsocketProvider>
     </BrowserRouter>

@@ -3,6 +3,8 @@
 interface CssExports {
   'list-item': string;
   'listItem': string;
+  'no-border': string;
+  'noBorder': string;
 }
 export const cssExports: CssExports;
 export default cssExports;

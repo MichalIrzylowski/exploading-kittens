@@ -8,7 +8,7 @@ import { Menu } from './menu';
 
 import css from './main-page.scss';
 
-export const MainPage = () => {
+export const MainPage: React.FC = () => {
   return (
     <main>
       <LayoutWrapper className={css.main}>
