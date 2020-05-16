@@ -32,7 +32,7 @@ export class ReconnectingWebsocket extends EventEmitter
     this.socket.addEventListener('message', ({ data }) => {
       const message = JSON.parse(data);
 
-      console.log('ReconnectingWebsocket._connect', data);
+      console.log('ReconnectingWebsocket._connect', message);
 
       this.emit(message.type, message.payload);
     });

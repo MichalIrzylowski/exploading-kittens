@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useWebsocket } from '@front/contexts/websocket';
+import { useMainWebsocket } from '@front/contexts/main-websocket';
 import { translate } from '@front/utils/translate';
 import { BrowserPaper } from '@front/components/browser-paper';
 
@@ -12,7 +12,7 @@ import * as localizations from './resources/localizations';
 import css from './games.scss';
 
 export const Games = () => {
-  const ws = useWebsocket();
+  const ws = useMainWebsocket();
   const [games, setGames] = useState<TBoard[]>([]);
   const translations = translate(localizations);
 
@@ -29,6 +29,7 @@ export const Games = () => {
       <BrowserPaper
         addressHref="https://explodingkittens.com/"
         onRefreshButtonClick={handleClick}
+        paperClassName={css.paper}
       >
         <div className={css.gamesListWrapper}>
           <div className={css.listHead}>

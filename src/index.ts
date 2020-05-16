@@ -2,6 +2,7 @@ import 'module-alias/register';
 import '../config/env';
 import http from 'http';
 import path from 'path';
+import url from 'url';
 
 import express from 'express';
 import WebSocket from 'ws';
@@ -11,6 +12,8 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { connection } from '@server/websocket';
 
+import { homePage } from '@shared/urls';
+
 import webpackConfig from '../webpack.config';
 
 const app = express();
@@ -18,7 +21,7 @@ const server = http.createServer(app);
 
 const PORT = 3000;
 
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({ noServer: true });
 
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(webpackConfig as Configuration);
@@ -45,9 +48,17 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/');
+app.get(homePage);
 
-wss.on('connection', connection);
+server.on('upgrade', (request, socket, head) => {
+  const pathname = url.parse(request.url).pathname;
+
+  if (pathname === homePage) {
+    wss.handleUpgrade(request, socket, head, connection);
+  } else {
+    socket.destroy();
+  }
+});
 
 server.listen(PORT, () => {
   console.log(`waiting for playing on: http://localhost:${PORT}`);

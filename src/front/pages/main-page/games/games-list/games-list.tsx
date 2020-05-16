@@ -16,9 +16,9 @@ interface IGamesList {
 const maxPlayers = 5;
 
 export const GamesList: React.FC<IGamesList> = ({ games }) => (
-  <List type="ul" className={css.listItem}>
+  <List type="ul">
     {games.map(({ id, name, players }) => (
-      <ListItem key={id}>
+      <ListItem key={id} className={css.listItem}>
         <span>{name}</span>
         <span>
           {players} / {maxPlayers}

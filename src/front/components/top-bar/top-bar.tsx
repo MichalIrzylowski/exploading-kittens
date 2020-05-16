@@ -9,7 +9,7 @@ import * as links from '@front/links';
 
 import { github, linkedIn, website } from '@front/images/svg';
 
-import css from './page-menu.scss';
+import css from './top-bar.scss';
 
 const size = 30;
 const iconSize = {
@@ -17,7 +17,7 @@ const iconSize = {
   width: size,
 };
 
-export const PageMenu = () => {
+export const TopBar = () => {
   return (
     <nav className={css.menu}>
       <LayoutWrapper className={css.wrapper}>

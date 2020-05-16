@@ -5,6 +5,7 @@ interface CssExports {
   'gamesListWrapper': string;
   'list-head': string;
   'listHead': string;
+  'paper': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
