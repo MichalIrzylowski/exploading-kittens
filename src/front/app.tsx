@@ -1,23 +1,20 @@
 import React from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { MainWebsocketProvider } from '@front/contexts/main-websocket';
-import { TopBar } from '@front/components/top-bar';
-import { Head } from '@front/components/head';
-import { MainPage } from '@front/pages/main-page';
 
-import { useMainWebsocket } from '@front/contexts/main-websocket';
-import { payloadTypes } from '@shared/payload-types';
+import { Head } from '@front/components/head';
+import { TopBar } from '@front/components/top-bar';
+
+import { MainPage } from '@front/pages/main-page';
+import { Guide } from '@front/pages/guide';
+
+import { homePage, guide } from '@shared/urls';
 
 import './main.scss';
 
 export const App: React.FC = () => {
-  const elo = useMainWebsocket();
-
-  const handleClick = () => {
-    elo.send(payloadTypes.createGame);
-  };
   return (
     <BrowserRouter>
       <MainWebsocketProvider>
@@ -25,8 +22,10 @@ export const App: React.FC = () => {
           <title>Exploding kittens</title>
         </Head>
         <TopBar />
-        <MainPage />
-        <button onClick={handleClick}>zrób grę</button>
+        <Switch>
+          <Route exact path={homePage} component={MainPage} />
+          <Route exact path={guide} component={Guide} />
+        </Switch>
       </MainWebsocketProvider>
     </BrowserRouter>
   );

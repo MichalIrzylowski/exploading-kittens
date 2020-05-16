@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get(homePage);
+app.get('*');
 
 server.on('upgrade', (request, socket, head) => {
   const pathname = url.parse(request.url).pathname;

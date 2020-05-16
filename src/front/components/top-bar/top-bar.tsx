@@ -24,7 +24,7 @@ const iconSize = {
 export const TopBar = () => {
   const translations = translate(localizations);
   return (
-    <nav className={css.menu}>
+    <div className={css.menu}>
       <LayoutWrapper className={css.wrapper}>
         <h3 className={css.logo}>
           <Link to={homePage}>
@@ -50,6 +50,6 @@ export const TopBar = () => {
           </MyLink>
         </div>
       </LayoutWrapper>
-    </nav>
+    </div>
   );
 };

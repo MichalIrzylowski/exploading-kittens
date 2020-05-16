@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { useMainWebsocket } from '@front/contexts/main-websocket';
 import { translate } from '@front/utils/translate';
@@ -16,15 +16,23 @@ export const Games = () => {
   const [games, setGames] = useState<TBoard[]>([]);
   const translations = translate(localizations);
 
-  ws.on(payloadTypes.currentBoards, (boards: TBoard[]) => setGames(boards));
-  ws.on(payloadTypes.createGame, (board: TBoard) =>
-    setGames([...games, board])
-  );
+  const settingBoards = (boards: TBoard[]) => setGames(boards);
+  const creatingGame = (board: TBoard) => setGames([...games, board]);
+
+  useEffect(() => {
+    ws.on(payloadTypes.currentBoards, settingBoards);
+    ws.on(payloadTypes.createGame, creatingGame);
+
+    return () => {
+      ws.off(payloadTypes.currentBoards, settingBoards);
+      ws.off(payloadTypes.createGame, creatingGame);
+    };
+  }, []);
 
   const handleClick = () => ws.send(payloadTypes.refreshBoards);
 
   return (
-    <div>
+    <div className={css.wrapper}>
       <h3>{translations.currentGames}</h3>
       <BrowserPaper
         addressHref="https://explodingkittens.com/"

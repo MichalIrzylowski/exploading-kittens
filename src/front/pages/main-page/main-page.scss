@@ -1,4 +1,6 @@
 .main {
   display: grid;
   grid-template-columns: 33% auto;
+  grid-template-rows: 400px auto;
+  gap: 20px;
 }
