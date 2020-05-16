@@ -8,7 +8,11 @@ import { Svg } from '@front/components/svg';
 import * as links from '@front/links';
 
 import { github, linkedIn, website } from '@front/images/svg';
+import { translate } from '@front/utils/translate';
 
+import { homePage } from '@shared/urls';
+
+import * as localizations from './resources/localizations';
 import css from './top-bar.scss';
 
 const size = 30;
@@ -18,12 +22,14 @@ const iconSize = {
 };
 
 export const TopBar = () => {
+  const translations = translate(localizations);
   return (
     <nav className={css.menu}>
       <LayoutWrapper className={css.wrapper}>
         <h3 className={css.logo}>
-          <Link to="/">
-            <span className={css.exploading}>Exploading</span> kittens
+          <Link to={homePage}>
+            <span className={css.exploading}>{translations.exploding}</span>{' '}
+            {translations.kittens}
           </Link>
         </h3>
         <div className={css.outLinks}>

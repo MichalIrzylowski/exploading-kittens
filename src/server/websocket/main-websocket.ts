@@ -20,7 +20,7 @@ fakeBoards.forEach((boardId) => {
 
 const fakeNames = ['Marian', 'Zenek', 'Miłosz', 'Tobiasz', 'Borys'];
 
-export const connection = (socket: WebSocket) => {
+export const mainConnection = (socket: WebSocket) => {
   sendBoards(socket, boards);
 
   socket.on('message', (data) => {

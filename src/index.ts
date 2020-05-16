@@ -10,7 +10,7 @@ import webpack, { Configuration } from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import { connection } from '@server/websocket';
+import { mainConnection } from '@server/websocket';
 
 import { homePage } from '@shared/urls';
 
@@ -21,7 +21,7 @@ const server = http.createServer(app);
 
 const PORT = 3000;
 
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ noServer: true }); // main ws connection
 
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(webpackConfig as Configuration);
@@ -54,7 +54,7 @@ server.on('upgrade', (request, socket, head) => {
   const pathname = url.parse(request.url).pathname;
 
   if (pathname === homePage) {
-    wss.handleUpgrade(request, socket, head, connection);
+    wss.handleUpgrade(request, socket, head, mainConnection);
   } else {
     socket.destroy();
   }
