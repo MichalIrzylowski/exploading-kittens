@@ -18,14 +18,29 @@ export const Games = () => {
 
   const settingBoards = (boards: TBoard[]) => setGames(boards);
   const creatingGame = (board: TBoard) => setGames([...games, board]);
+  const deleteBoard = (boardId: string) =>
+    setGames((prevGames) => prevGames.filter((board) => board.id !== boardId));
+  const removePlayer = (boardId: string) => {
+    const removedPlayerGames = games.map((board) => {
+      if (board.id === boardId) {
+        board.players--;
+      }
+      return board;
+    });
+    setGames(removedPlayerGames);
+  };
 
   useEffect(() => {
-    ws.on(payloadTypes.currentBoards, settingBoards);
+    ws.on(payloadTypes.boardDeleted, deleteBoard);
     ws.on(payloadTypes.createBoard, creatingGame);
+    ws.on(payloadTypes.currentBoards, settingBoards);
+    ws.on(payloadTypes.playerLeftBoard, removePlayer);
 
     return () => {
-      ws.off(payloadTypes.currentBoards, settingBoards);
+      ws.off(payloadTypes.boardDeleted, deleteBoard);
       ws.off(payloadTypes.createBoard, creatingGame);
+      ws.off(payloadTypes.currentBoards, settingBoards);
+      ws.off(payloadTypes.playerLeftBoard, removePlayer);
     };
   }, []);
 
