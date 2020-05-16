@@ -11,7 +11,7 @@ import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
 
 import { boards, players } from './ws-data';
 
-export const gameWebsocket = (socket: WebSocket) => {
+export const gameConnection = (socket: WebSocket) => {
   socket.on('message', (data) => {
     const message = JSON.parse(data as any);
 
@@ -40,6 +40,12 @@ export const gameWebsocket = (socket: WebSocket) => {
             name: boardId,
           },
         });
+        break;
+
+      case payloadTypes.registerUser:
+        // when user is connecting his context sends register user due to the fact that is triggered on open connection
+        // TODO: fix it better then it is now
+        console.log('register user');
         break;
 
       default:
