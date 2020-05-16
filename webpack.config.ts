@@ -8,7 +8,6 @@ const buildPath = './src/public/';
 const htmlTemplate = './templates/index.html';
 
 export default {
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: [
     'webpack-hot-middleware/client?path=/__webpack_hmr', // this is needed for HMR
     './src/front/index.tsx',

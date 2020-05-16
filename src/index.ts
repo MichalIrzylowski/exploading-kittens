@@ -6,7 +6,7 @@ import url from 'url';
 
 import express from 'express';
 import WebSocket from 'ws';
-import webpack, { Configuration } from 'webpack';
+import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
@@ -24,7 +24,10 @@ const PORT = 3000;
 const wss = new WebSocket.Server({ noServer: true }); // main ws connection
 
 if (process.env.NODE_ENV === 'development') {
-  const compiler = webpack(webpackConfig as Configuration);
+  const compiler = webpack({
+    mode: 'development',
+    ...webpackConfig,
+  });
 
   app.use(
     webpackDevMiddleware(compiler, {
@@ -39,7 +42,10 @@ if (process.env.NODE_ENV === 'development') {
     })
   );
 } else if (process.env.NODE_ENV === 'production') {
-  const compiler = webpack(webpackConfig as Configuration);
+  const compiler = webpack({
+    mode: 'production',
+    ...webpackConfig,
+  });
 
   compiler.run((err, stats) => {
     console.log('bundle  build');
@@ -47,8 +53,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
-app.get('*');
+app.get(homePage);
 
 server.on('upgrade', (request, socket, head) => {
   const pathname = url.parse(request.url).pathname;
