@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 import { useBoardWebsocket } from '@front/contexts/board-websocket';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
-import { localStorageItems } from '@front/shared/types';
+import { sessionStorageItems } from '@front/shared/types';
 import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
 
@@ -17,7 +17,9 @@ export const Game: React.FC = () => {
 
   const handleJoinGame = () => {
     if (location.state) {
-      const playerId = localStorage.getItem(localStorageItems.user) as string;
+      const playerId = sessionStorage.getItem(
+        sessionStorageItems.user
+      ) as string;
       ws.send(payloadTypes.joinGame, {
         boardId: location.state,
         userId: JSON.parse(playerId).id,

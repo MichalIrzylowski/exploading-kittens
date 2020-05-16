@@ -3,7 +3,7 @@ import { createMessage } from '@shared/helpers/create-message';
 import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
 
-import { localStorageItems } from '@front/shared/types';
+import { sessionStorageItems } from '@front/shared/types';
 
 interface IReconnectingWebsocket {
   closeOnPurpose: boolean;
@@ -22,7 +22,7 @@ export class ReconnectingWebsocket extends EventEmitter
     this.closeOnPurpose = false;
 
     this.on(payloadTypes.registerUser, (data) => {
-      localStorage.setItem(localStorageItems.user, JSON.stringify(data));
+      sessionStorage.setItem(sessionStorageItems.user, JSON.stringify(data));
     });
   }
 
@@ -43,7 +43,7 @@ export class ReconnectingWebsocket extends EventEmitter
   onOpenConnection = () => {
     this.emit(customEvents.open);
 
-    let user = localStorage.getItem(localStorageItems.user);
+    let user = sessionStorage.getItem(sessionStorageItems.user);
     if (user) user = JSON.parse(user);
     this.send(payloadTypes.registerUser, user);
 

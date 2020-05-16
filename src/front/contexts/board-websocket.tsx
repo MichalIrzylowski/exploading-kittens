@@ -6,7 +6,7 @@ import { ReconnectingWebsocket } from '@front/classes/reconnecting-websocket';
 import { payloadTypes } from '@shared/payload-types';
 
 import { boardSocketRoute } from '@shared/urls';
-import { localStorageItems } from '@front/shared/types';
+import { sessionStorageItems } from '@front/shared/types';
 
 const WebsocketContext = React.createContext<ReconnectingWebsocket | null>(
   null
@@ -18,10 +18,12 @@ export const BoardWebsocketProvider: React.FC = (props) => {
   ws._connect();
 
   const handleCloseConnection = () => {
-    const curentGame = localStorage.getItem(localStorageItems.currentGame);
+    const curentGame = sessionStorage.getItem(sessionStorageItems.currentGame);
 
     if (curentGame) {
-      const playerId = localStorage.getItem(localStorageItems.user) as string;
+      const playerId = sessionStorage.getItem(
+        sessionStorageItems.user
+      ) as string;
       const payload = {
         playerId: JSON.parse(playerId).id,
         boardId: curentGame,
@@ -30,7 +32,7 @@ export const BoardWebsocketProvider: React.FC = (props) => {
       ws.send(payloadTypes.leaveGame, payload);
     }
 
-    localStorage.removeItem(localStorageItems.currentGame);
+    sessionStorage.removeItem(sessionStorageItems.currentGame);
     ws.close();
   };
 

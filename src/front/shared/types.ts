@@ -2,7 +2,7 @@ export interface IObject<T> {
   [key: string]: T;
 }
 
-export enum localStorageItems {
+export enum sessionStorageItems {
   user = 'user',
   currentGame = 'currentGame',
 }
