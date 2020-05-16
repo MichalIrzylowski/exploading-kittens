@@ -12,7 +12,7 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { mainConnection } from '@server/websocket';
 
-import { homePage } from '@shared/urls';
+import { homePage, board } from '@shared/urls';
 
 import webpackConfig from '../webpack.config';
 
@@ -22,10 +22,12 @@ const server = http.createServer(app);
 const PORT = 3000;
 
 const wss = new WebSocket.Server({ noServer: true }); // main ws connection
+const wssGame = new WebSocket.Server({ noServer: true });
 
 if (process.env.NODE_ENV === 'development') {
   const compiler = webpack({
     mode: 'development',
+    devtool: 'inline-source-map',
     ...webpackConfig,
   });
 
@@ -62,6 +64,10 @@ server.on('upgrade', (request, socket, head) => {
 
   if (pathname === homePage) {
     wss.handleUpgrade(request, socket, head, mainConnection);
+  } else if (pathname === board) {
+    wssGame.handleUpgrade(request, socket, head, (socket) => {
+      socket.send('welcome to the game');
+    });
   } else {
     socket.destroy();
   }

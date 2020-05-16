@@ -6,8 +6,9 @@ import { customEvents } from '@shared/events';
 import { localStorageItems } from '@front/shared/types';
 
 interface IReconnectingWebsocket {
-  url: string;
+  closeOnPurpose: boolean;
   socket?: WebSocket;
+  url: string;
 }
 
 const second = 1000;
@@ -18,6 +19,7 @@ export class ReconnectingWebsocket extends EventEmitter
   constructor(url: string) {
     super();
     this.url = url;
+    this.closeOnPurpose = false;
 
     this.on(payloadTypes.registerUser, (data) => {
       localStorage.setItem(localStorageItems.user, JSON.stringify(data));
@@ -53,12 +55,20 @@ export class ReconnectingWebsocket extends EventEmitter
     timeout = setTimeout(() => {
       this._connect();
     }, second);
+
+    if (this.closeOnPurpose) clearTimeout(timeout);
   };
 
   send = (type: payloadTypes, payload?: any) => {
     this.socket?.send(createMessage(type, payload));
   };
 
+  close = () => {
+    this.closeOnPurpose = true;
+    this.socket?.close();
+  };
+
+  closeOnPurpose: boolean;
   socket?: WebSocket;
   url: string;
 }

@@ -1,4 +1,13 @@
+@import '../../shared/styles/variables.scss';
+
 .none {
   background: transparent;
   border: none;
+}
+
+.primary {
+  background-color: $white;
+  padding: 10px;
+  border: 2px solid $gray;
+  border-radius: $radius;
 }

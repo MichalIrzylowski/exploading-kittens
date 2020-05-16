@@ -12,6 +12,8 @@ export const BoardWebsocketProvider: React.FC = (props) => {
   const ws = new ReconnectingWebsocket(boardSocketRoute);
   ws._connect();
 
+  window.addEventListener('popstate', () => ws.close());
+
   return <WebsocketContext.Provider value={ws} {...props} />;
 };
 

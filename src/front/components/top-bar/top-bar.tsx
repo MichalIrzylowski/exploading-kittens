@@ -9,10 +9,10 @@ import * as links from '@front/links';
 
 import { github, linkedIn, website } from '@front/images/svg';
 import { translate } from '@front/utils/translate';
+import { explodingKittens } from '@front/shared/localizations';
 
 import { homePage } from '@shared/urls';
 
-import * as localizations from './resources/localizations';
 import css from './top-bar.scss';
 
 const size = 30;
@@ -22,14 +22,14 @@ const iconSize = {
 };
 
 export const TopBar = () => {
-  const translations = translate(localizations);
+  const translations = translate({ explodingKittens });
+  const title = translations.explodingKittens.split(' ');
   return (
     <div className={css.menu}>
       <LayoutWrapper className={css.wrapper}>
         <h3 className={css.logo}>
           <Link to={homePage}>
-            <span className={css.exploading}>{translations.exploding}</span>{' '}
-            {translations.kittens}
+            <span className={css.exploading}>{title[0]}</span> {title[1]}
           </Link>
         </h3>
         <div className={css.outLinks}>

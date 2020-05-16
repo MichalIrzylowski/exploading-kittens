@@ -8,7 +8,7 @@ export const Header = () => {
 
   return (
     <header>
-      <h1>{translations.exploadingKittens}</h1>
+      <h1>{translations.explodingKittens}</h1>
       <h2>
         {translations.cardGame}
         <br />

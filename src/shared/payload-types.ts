@@ -1,6 +1,8 @@
 export enum payloadTypes {
-  createGame = 'create-game',
+  boardCreated = 'board-created',
+  createBoard = 'create-board',
   currentBoards = 'current-boards',
+  error = 'error',
   refreshBoards = 'refresh-boards',
   registerUser = 'register-user',
   tooManyPlayers = 'too-many-players',

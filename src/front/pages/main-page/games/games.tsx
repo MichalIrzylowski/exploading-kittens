@@ -21,11 +21,11 @@ export const Games = () => {
 
   useEffect(() => {
     ws.on(payloadTypes.currentBoards, settingBoards);
-    ws.on(payloadTypes.createGame, creatingGame);
+    ws.on(payloadTypes.createBoard, creatingGame);
 
     return () => {
       ws.off(payloadTypes.currentBoards, settingBoards);
-      ws.off(payloadTypes.createGame, creatingGame);
+      ws.off(payloadTypes.createBoard, creatingGame);
     };
   }, []);
 

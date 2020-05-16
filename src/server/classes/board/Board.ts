@@ -14,11 +14,10 @@ interface IBoard {
 const maxPlayers = 5;
 
 export class Board extends EventEmitter implements IBoard {
-  // TODO: it has to accept player in constructor as well
-  constructor(id: string) {
+  constructor(id: string, player: Player) {
     super();
     this.id = id;
-    this.players = [];
+    this.players = [player];
     this.deck = new Deck();
   }
 

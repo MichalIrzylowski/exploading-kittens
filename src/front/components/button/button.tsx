@@ -1,10 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import css from './button.scss';
+import css, { cssExports } from './button.scss';
 
 export enum buttonAppearance {
   none = 'none',
+  primary = 'primary',
 }
 
 interface IButton {
