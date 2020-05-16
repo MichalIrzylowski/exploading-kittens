@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 
 import { List } from '@front/components/list';
 import { ListItem } from '@front/components/list-item';
@@ -13,7 +13,14 @@ interface IGamesList {
   games: TBoard[];
 }
 
+interface IGameLink extends LinkProps {
+  active: boolean;
+}
+
 const maxPlayers = 5;
+
+const GameLink: React.FC<IGameLink> = ({ active, ...restProps }) =>
+  active ? <Link {...restProps} /> : <p>Max players</p>;
 
 export const GamesList: React.FC<IGamesList> = ({ games }) => (
   <List type="ul">
@@ -23,7 +30,12 @@ export const GamesList: React.FC<IGamesList> = ({ games }) => (
         <span>
           {players} / {maxPlayers}
         </span>
-        <Link to={board + '/' + id}>Dołącz</Link>
+        <GameLink
+          active={players !== maxPlayers}
+          to={{ pathname: board, state: id }}
+        >
+          Dołącz
+        </GameLink>
       </ListItem>
     ))}
   </List>
