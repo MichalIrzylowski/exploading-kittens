@@ -4,14 +4,21 @@ import { createMessage } from '@shared/helpers/create-message';
 
 interface IMessage {
   type: payloadTypes;
-  payload: any;
+  payload?: any;
 }
 
 export const broadCastToAllUsers = (
-  players: Map<string, Player>,
+  players: Map<string, Player> | Player[],
   { type, payload }: IMessage
 ) => {
-  players.forEach((player) => {
-    player.socket.send(createMessage(type, payload));
-  });
+  if (Array.isArray(players)) {
+    players.forEach((player) => {
+      console.log(player);
+      player.send(type, payload);
+    });
+  } else {
+    players.forEach((player) => {
+      player.send(type, payload);
+    });
+  }
 };

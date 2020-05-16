@@ -2,12 +2,35 @@ import React, { useState, useEffect } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
+import { useBoardWebsocket } from '@front/contexts/board-websocket';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
+import { localStorageItems } from '@front/shared/types';
+import { payloadTypes } from '@shared/payload-types';
+import { customEvents } from '@shared/events';
+
 import { BoardCreator } from './board-creator';
 
 export const Game: React.FC = () => {
   const location = useLocation();
   const [isBoard, setBoard] = useState(location.state ? location.state : '');
+  const ws = useBoardWebsocket();
+
+  const handleJoinGame = () => {
+    if (location.state) {
+      const playerId = localStorage.getItem(localStorageItems.user) as string;
+      ws.send(payloadTypes.joinGame, {
+        boardId: location.state,
+        userId: JSON.parse(playerId).id,
+      });
+    }
+  };
+
+  useEffect(() => {
+    ws.on(customEvents.open, handleJoinGame);
+    return () => {
+      ws.off(customEvents.open, handleJoinGame);
+    };
+  });
 
   return (
     <LayoutWrapper>

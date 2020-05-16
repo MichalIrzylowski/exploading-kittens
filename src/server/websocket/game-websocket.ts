@@ -44,8 +44,14 @@ export const gameConnection = (socket: WebSocket) => {
         break;
 
       case payloadTypes.leaveGame:
-        const { payload } = message;
-        boards.get(payload.boardId)?.removePlayer(payload.playerId);
+        boards
+          .get(message.payload.boardId)
+          ?.removePlayer(message.payload.playerId);
+        break;
+
+      case payloadTypes.joinGame:
+        const joiningPlayer = players.get(message.payload.userId) as Player;
+        boards.get(message.payload.boardId)?.addPlayer(joiningPlayer);
         break;
 
       case payloadTypes.registerUser:

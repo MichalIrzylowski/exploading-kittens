@@ -5,9 +5,11 @@ export enum payloadTypes {
   currentBoards = 'current-boards',
   error = 'error',
   joinedGame = 'joined-a-game',
+  joinGame = 'join-game',
   leaveGame = 'leave-game',
   playerLeftBoard = 'player-left-board',
   refreshBoards = 'refresh-boards',
   registerUser = 'register-user',
   tooManyPlayers = 'too-many-players',
+  newPlayer = 'new-player',
 }

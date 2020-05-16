@@ -30,6 +30,10 @@ export class Board extends EventEmitter implements IBoard {
       return;
     }
 
+    broadCastToAllUsers(players, {
+      type: payloadTypes.newPlayer,
+      payload: this.id,
+    });
     this.players.push(player);
     player.send(payloadTypes.joinedGame);
   }

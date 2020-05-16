@@ -29,6 +29,8 @@ export const BoardWebsocketProvider: React.FC = (props) => {
 
       ws.send(payloadTypes.leaveGame, payload);
     }
+
+    localStorage.removeItem(localStorageItems.currentGame);
     ws.close();
   };
 
