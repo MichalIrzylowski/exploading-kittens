@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { ReconnectingWebsocket } from '@front/classes/reconnecting-websocket';
 import { payloadTypes } from '@shared/payload-types';
 
-import { boardSocketRoute } from '@shared/urls';
+import { boardSocketRoute, homePage } from '@shared/urls';
 import { sessionStorageItems } from '@front/shared/types';
 
 const WebsocketContext = React.createContext<ReconnectingWebsocket | null>(
@@ -36,13 +36,23 @@ export const BoardWebsocketProvider: React.FC = (props) => {
   };
 
   useEffect(() => {
-    history.listen(handleLeaveGame);
+    history.listen((location) => {
+      if (location.pathname === homePage) {
+        handleLeaveGame();
+      }
+    });
+    window.addEventListener('beforeunload', handleLeaveGame);
 
     return () => {
-      history.listen(handleLeaveGame);
+      history.listen((location) => {
+        if (location.pathname === homePage) {
+          handleLeaveGame();
+        }
+      });
       ws.removeAllListeners();
+      window.removeEventListener('beforeunload', handleLeaveGame);
     };
-  }, []);
+  }, [history.location.pathname]);
 
   return <WebsocketContext.Provider value={ws} {...props} />;
 };
