@@ -48,10 +48,10 @@ export class Player implements IPlayer {
   }
 
   snackMessage(type: payloadTypes, socketType: TSocket, payload?: {}) {
-    const snackData = type.split('-');
+    const [message, severity] = type.split('-');
     const snackPayload = {
-      message: snackData[0],
-      severity: snackData[1],
+      message,
+      severity,
       ...payload,
     };
     this.sockets[socketType]?.send(createMessage(type, snackPayload));

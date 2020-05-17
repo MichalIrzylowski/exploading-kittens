@@ -6,14 +6,9 @@ import { players, boards } from '@server/websocket';
 
 import { payloadTypes } from '@shared/payload-types';
 import { socketStates } from '@shared/socket-states';
+import { gameStages } from '@shared/game-stages';
 
 import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
-
-enum gameStages {
-  notAbleToStart,
-  readyToStart,
-  started,
-}
 
 interface IBoard {
   id: string;
@@ -51,26 +46,28 @@ export class Board extends EventEmitter implements IBoard {
       payload: this.id,
     });
 
-    this.broadCastSnacks(payloadTypes.newPlayerSnackSuccess);
+    const currentPlayers = this.players.map((player) =>
+      player.getIdentification()
+    );
+    this.broadCastSnacks(payloadTypes.playerJoinedSnackSuccess, {
+      currentPlayers,
+    });
 
-    const isReadyToStart = this.gameStage === gameStages.notAbleToStart;
-    const are2Players = this.players.length >= 2;
+    const isReadyToStart = this.players.length > 1;
 
     player.snackMessage(payloadTypes.joinedBoardSnackSuccess, 'main', {
       boardId: this.id,
+      isReadyToStart,
+      currentPlayers,
     });
-    if (player.sockets.game?.readyState !== socketStates.open) {
-      player.send(payloadTypes.gameReadyToStart);
-    }
 
-    if (isReadyToStart && are2Players) {
+    if (this.gameStage === gameStages.notAbleToStart && isReadyToStart) {
       this.gameStage = gameStages.readyToStart;
-      this.broadCastGameMessage(payloadTypes.gameReadyToStart);
+      this.broadCastGameMessage(
+        payloadTypes.gameReadyToStart,
+        gameStages.readyToStart
+      );
       return;
-    }
-
-    if (this.players.length === 5) {
-      this.gameStage = gameStages.started;
     }
   }
 
@@ -97,7 +94,10 @@ export class Board extends EventEmitter implements IBoard {
 
     if (this.players.length < 2) {
       this.gameStage = gameStages.notAbleToStart;
-      this.broadCastGameMessage(payloadTypes.gameNotAbleToStart);
+      this.broadCastGameMessage(
+        payloadTypes.gameNotAbleToStart,
+        payloadTypes.gameNotAbleToStart
+      );
     }
   }
 

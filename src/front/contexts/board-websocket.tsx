@@ -30,27 +30,19 @@ export const BoardWebsocketProvider: React.FC = (props) => {
       };
 
       ws.send(payloadTypes.leaveGame, payload);
+      ws.emit('close-connection-request');
     }
 
     sessionStorage.removeItem(sessionStorageItems.currentGame);
   };
 
   useEffect(() => {
-    history.listen((location) => {
-      if (location.pathname === homePage) {
-        handleLeaveGame();
-      }
-    });
     window.addEventListener('beforeunload', handleLeaveGame);
 
     return () => {
-      history.listen((location) => {
-        if (location.pathname === homePage) {
-          handleLeaveGame();
-        }
-      });
-      ws.removeAllListeners();
+      handleLeaveGame();
       window.removeEventListener('beforeunload', handleLeaveGame);
+      ws.close();
     };
   }, [history.location.pathname]);
 
