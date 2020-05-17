@@ -10,6 +10,7 @@ import { TBoard } from '@shared/types';
 import { GamesList } from './games-list/';
 import * as localizations from './resources/localizations';
 import css from './games.scss';
+import { board } from '@shared/urls';
 
 export const Games = () => {
   const ws = useMainWebsocket();
@@ -21,13 +22,21 @@ export const Games = () => {
   const deleteBoard = (boardId: string) =>
     setGames((prevGames) => prevGames.filter((board) => board.id !== boardId));
   const removePlayer = (boardId: string) => {
-    const removedPlayerGames = games.map((board) => {
-      if (board.id === boardId) {
-        board.players--;
-      }
-      return board;
-    });
-    setGames(removedPlayerGames);
+    setGames((prevGames) =>
+      prevGames.map((board) => {
+        if (board.id === boardId) board.players--;
+        return board;
+      })
+    );
+  };
+  const addPlayer = (boardId: string) => {
+    setGames((prevGames) =>
+      prevGames.map((board) => {
+        if (board.id === boardId) board.players++;
+
+        return board;
+      })
+    );
   };
 
   useEffect(() => {
@@ -35,12 +44,14 @@ export const Games = () => {
     ws.on(payloadTypes.createBoard, creatingGame);
     ws.on(payloadTypes.currentBoards, settingBoards);
     ws.on(payloadTypes.playerLeftBoard, removePlayer);
+    ws.on(payloadTypes.newPlayer, addPlayer);
 
     return () => {
       ws.off(payloadTypes.boardDeleted, deleteBoard);
       ws.off(payloadTypes.createBoard, creatingGame);
       ws.off(payloadTypes.currentBoards, settingBoards);
       ws.off(payloadTypes.playerLeftBoard, removePlayer);
+      ws.off(payloadTypes.newPlayer, addPlayer);
     };
   }, []);
 
