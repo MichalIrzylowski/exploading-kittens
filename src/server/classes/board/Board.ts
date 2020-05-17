@@ -2,12 +2,12 @@ import EventEmitter from 'eventemitter3';
 
 import { Player } from '@server/classes/player';
 import { Deck } from '@server/classes/deck';
-
-import { payloadTypes } from '@shared/payload-types';
 import { players, boards } from '@server/websocket';
 
+import { payloadTypes } from '@shared/payload-types';
+import { socketStates } from '@shared/socket-states';
+
 import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
-import { broadCastGameMessage } from '@server/utils/broad-cast-game-message';
 
 enum gameStages {
   notAbleToStart,
@@ -44,21 +44,28 @@ export class Board extends EventEmitter implements IBoard {
       return;
     }
 
+    this.players.push(player);
+
     broadCastToAllUsers(players, {
       type: payloadTypes.newPlayer,
       payload: this.id,
     });
-    this.players.push(player);
-    player.gameMessage(payloadTypes.joinedGame);
+    this.broadCastGameMessage(
+      payloadTypes.newPlayer,
+      player.getIdentification()
+    );
 
     const isReadyToStart = this.gameStage === gameStages.notAbleToStart;
     const are2Players = this.players.length >= 2;
 
+    player.send(payloadTypes.joinedGame);
+    if (player.sockets.game?.readyState !== socketStates.open) {
+      player.send(payloadTypes.gameReadyToStart);
+    }
+
     if (isReadyToStart && are2Players) {
       this.gameStage = gameStages.readyToStart;
-      broadCastGameMessage(this.players, {
-        type: payloadTypes.gameReadyToStart,
-      });
+      this.broadCastGameMessage(payloadTypes.gameReadyToStart);
       return;
     }
 
@@ -85,9 +92,21 @@ export class Board extends EventEmitter implements IBoard {
       type: payloadTypes.playerLeftBoard,
       payload: this.id,
     });
-    broadCastGameMessage(this.players, {
-      type: payloadTypes.playerLeftBoard,
-      payload: this.id,
+    this.broadCastGameMessage(payloadTypes.playerLeftBoard, id);
+
+    if (this.players.length < 2) {
+      this.gameStage = gameStages.notAbleToStart;
+      this.broadCastGameMessage(payloadTypes.gameNotAbleToStart);
+    }
+  }
+
+  broadCastGameMessage(
+    type: payloadTypes,
+    payload?: any,
+    players = this.players
+  ) {
+    players.forEach((player) => {
+      player.gameMessage(type, payload);
     });
   }
 

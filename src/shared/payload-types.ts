@@ -6,6 +6,7 @@ export enum payloadTypes {
   error = 'error',
   errorGameHasAlreadyStarted = 'error-game-has-already-started',
   errorTooManyPlayers = 'too-many-players',
+  gameNotAbleToStart = 'game-not-able-to-start',
   gameReadyToStart = 'game-ready-to-start',
   gameStarted = 'game-started',
   joinedGame = 'joined-a-game',
