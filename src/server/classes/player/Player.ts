@@ -9,17 +9,22 @@ import { IPlayerID, PlayerIdentification } from './PlayerIdentification';
 
 interface IPlayer {
   data: PlayerIdentification;
-  socket: WebSocket;
+  sockets: {
+    main: WebSocket;
+    game?: WebSocket;
+  };
   isPlaying: string;
 }
 
 export class Player implements IPlayer {
   constructor(playerId: IPlayerID, socket: WebSocket) {
     this.data = new PlayerIdentification(playerId);
-    this.socket = socket;
+    this.sockets = {
+      main: socket,
+    };
     this.isPlaying = '';
 
-    this.socket.addEventListener('close', () => {
+    this.sockets.main.addEventListener('close', () => {
       if (this.isPlaying) {
         boards.get(this.isPlaying)?.removePlayer(this.getIdentification().id);
       }
@@ -33,10 +38,17 @@ export class Player implements IPlayer {
   }
 
   send(type: payloadTypes, payload?: any) {
-    this.socket.send(createMessage(type, payload));
+    this.sockets.main.send(createMessage(type, payload));
+  }
+
+  gameMessage(type: payloadTypes, payload?: any) {
+    this.sockets.game?.send(createMessage(type, payload));
   }
 
   data: PlayerIdentification;
   isPlaying: string;
-  socket: WebSocket;
+  sockets: {
+    main: WebSocket;
+    game?: WebSocket;
+  };
 }

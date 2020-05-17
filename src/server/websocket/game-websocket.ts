@@ -55,9 +55,8 @@ export const gameConnection = (socket: WebSocket) => {
         break;
 
       case payloadTypes.registerUser:
-        // when user is connecting his context sends register user due to the fact that is triggered on open connection
-        // TODO: fix it better then it is now
-        console.log('register user');
+        const registeringPlayer = players.get(message.payload.id) as Player;
+        registeringPlayer.sockets.game = socket;
         break;
 
       default:

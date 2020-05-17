@@ -6,11 +6,11 @@ interface IMessage {
   payload?: any;
 }
 
-export const broadCastToAllUsers = (
-  players: Map<string, Player>,
+export const broadCastGameMessage = (
+  players: Player[],
   { type, payload }: IMessage
 ) => {
   players.forEach((player) => {
-    player.send(type, payload);
+    player.gameMessage(type, payload);
   });
 };

@@ -14,9 +14,8 @@ import {
   cardNames,
 } from '@server/classes/card';
 
-const names = {
+const cardNames = {
   attack: Object.keys(attackNames),
-  exploading: Object.keys(exploadingNames),
   cats: Object.keys(catsNames),
   diffuse: Object.keys(diffuseNames),
   favor: Object.keys(favorNames),
@@ -24,16 +23,17 @@ const names = {
   seeTheFuture: Object.keys(seeTheFutureNames),
   shuffle: Object.keys(shuffleNames),
   skip: Object.keys(skipNames),
+  exploading: Object.keys(exploadingNames),
 };
 
 export const prepareDeck = () => {
   const deck: Card[] = [];
 
-  const types = Object.keys(names);
+  const types = Object.keys(cardNames);
 
   types.forEach((type) => {
     if (type !== 'cats') {
-      names[type as keyof typeof names].forEach((name) => {
+      cardNames[type as keyof typeof cardNames].forEach((name) => {
         const cardType = cardTypes[type as keyof typeof cardTypes];
         const cardName = name as cardNames;
         const color = cardColors[type as keyof typeof cardColors];
@@ -41,6 +41,15 @@ export const prepareDeck = () => {
         deck.push(new Card({ type: cardType, name: cardName, color }));
       });
     } else {
+      for (let i = 0; i < 4; i++) {
+        cardNames.cats.forEach((name) => {
+          deck.push({
+            type: cardTypes.cats,
+            name: name as cardNames,
+            color: cardColors.cats,
+          });
+        });
+      }
     }
   });
 

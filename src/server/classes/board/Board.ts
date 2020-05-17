@@ -7,11 +7,19 @@ import { payloadTypes } from '@shared/payload-types';
 import { players, boards } from '@server/websocket';
 
 import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
+import { broadCastGameMessage } from '@server/utils/broad-cast-game-message';
+
+enum gameStages {
+  notAbleToStart,
+  readyToStart,
+  started,
+}
 
 interface IBoard {
   id: string;
   players: Player[];
   deck: Deck;
+  gameStage: gameStages;
 }
 
 const maxPlayers = 5;
@@ -22,11 +30,17 @@ export class Board extends EventEmitter implements IBoard {
     this.id = id;
     this.players = [player];
     this.deck = new Deck();
+    this.gameStage = gameStages.notAbleToStart;
   }
 
   addPlayer(player: Player) {
     if (this.players.length === maxPlayers) {
-      player.send(payloadTypes.tooManyPlayers);
+      player.send(payloadTypes.errorTooManyPlayers);
+      return;
+    }
+
+    if (this.gameStage === gameStages.started) {
+      player.send(payloadTypes.errorGameHasAlreadyStarted);
       return;
     }
 
@@ -35,7 +49,22 @@ export class Board extends EventEmitter implements IBoard {
       payload: this.id,
     });
     this.players.push(player);
-    player.send(payloadTypes.joinedGame);
+    player.gameMessage(payloadTypes.joinedGame);
+
+    const isReadyToStart = this.gameStage === gameStages.notAbleToStart;
+    const are2Players = this.players.length >= 2;
+
+    if (isReadyToStart && are2Players) {
+      this.gameStage = gameStages.readyToStart;
+      broadCastGameMessage(this.players, {
+        type: payloadTypes.gameReadyToStart,
+      });
+      return;
+    }
+
+    if (this.players.length === 5) {
+      this.gameStage = gameStages.started;
+    }
   }
 
   removePlayer(id: string) {
@@ -56,8 +85,13 @@ export class Board extends EventEmitter implements IBoard {
       type: payloadTypes.playerLeftBoard,
       payload: this.id,
     });
+    broadCastGameMessage(this.players, {
+      type: payloadTypes.playerLeftBoard,
+      payload: this.id,
+    });
   }
 
+  gameStage: gameStages;
   id: string;
   players: Player[];
   deck: Deck;
