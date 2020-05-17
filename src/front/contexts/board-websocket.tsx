@@ -17,7 +17,7 @@ export const BoardWebsocketProvider: React.FC = (props) => {
   const ws = new ReconnectingWebsocket(boardSocketRoute);
   ws._connect();
 
-  const handleCloseConnection = () => {
+  const handleLeaveGame = () => {
     const curentGame = sessionStorage.getItem(sessionStorageItems.currentGame);
 
     if (curentGame) {
@@ -33,14 +33,14 @@ export const BoardWebsocketProvider: React.FC = (props) => {
     }
 
     sessionStorage.removeItem(sessionStorageItems.currentGame);
-    ws.close();
   };
 
   useEffect(() => {
-    history.listen(handleCloseConnection);
+    history.listen(handleLeaveGame);
 
     return () => {
-      history.listen(handleCloseConnection);
+      history.listen(handleLeaveGame);
+      ws.removeAllListeners();
     };
   }, []);
 
