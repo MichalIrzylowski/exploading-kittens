@@ -31,7 +31,15 @@ export const gameConnection = (socket: WebSocket) => {
         player.isPlaying = boardId;
         boards.set(boardId, new Board(boardId, player));
 
+        const snackData = payloadTypes.boardCreatedSnackSuccess.split('-');
+
         socket.send(createMessage(payloadTypes.boardCreated, boardId));
+        socket.send(
+          createMessage(payloadTypes.boardCreatedSnackSuccess, {
+            message: snackData[0],
+            severity: snackData[1],
+          })
+        );
 
         broadCastToAllUsers(players, {
           type: payloadTypes.createBoard,

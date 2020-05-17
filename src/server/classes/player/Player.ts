@@ -16,6 +16,8 @@ interface IPlayer {
   isPlaying: string;
 }
 
+export type TSocket = 'main' | 'game';
+
 export class Player implements IPlayer {
   constructor(playerId: IPlayerID, socket: WebSocket) {
     this.data = new PlayerIdentification(playerId);
@@ -43,6 +45,16 @@ export class Player implements IPlayer {
 
   gameMessage(type: payloadTypes, payload?: any) {
     this.sockets.game?.send(createMessage(type, payload));
+  }
+
+  snackMessage(type: payloadTypes, socketType: TSocket, payload?: {}) {
+    const snackData = type.split('-');
+    const snackPayload = {
+      message: snackData[0],
+      severity: snackData[1],
+      ...payload,
+    };
+    this.sockets[socketType]?.send(createMessage(type, snackPayload));
   }
 
   data: PlayerIdentification;

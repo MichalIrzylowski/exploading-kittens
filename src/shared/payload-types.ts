@@ -1,5 +1,6 @@
 export enum payloadTypes {
   boardCreated = 'board-created',
+  boardCreatedSnackSuccess = 'boardCreatedSnack-success',
   boardDeleted = 'board-deleted',
   createBoard = 'create-board',
   currentBoards = 'current-boards',
@@ -9,11 +10,13 @@ export enum payloadTypes {
   gameNotAbleToStart = 'game-not-able-to-start',
   gameReadyToStart = 'game-ready-to-start',
   gameStarted = 'game-started',
-  joinedGame = 'joined-a-game',
+  joinedBoardSnackSuccess = 'joinedBoardSnack-success',
   joinGame = 'join-game',
   leaveGame = 'leave-game',
   newPlayer = 'new-player',
+  newPlayerSnackSuccess = 'playerJoinedSnack-success',
   playerLeftBoard = 'player-left-board',
+  playerLeftBoardSnackInfo = 'playerLeftBoard-info',
   refreshBoards = 'refresh-boards',
   registerUser = 'register-user',
 }

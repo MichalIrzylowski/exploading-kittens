@@ -8,6 +8,7 @@ import { sessionStorageItems } from '@front/shared/types';
 import { payloadTypes } from '@shared/payload-types';
 import { customEvents } from '@shared/events';
 
+import { BoardPlay } from './board-play';
 import { BoardCreator } from './board-creator';
 
 export const Game: React.FC = () => {
@@ -37,6 +38,7 @@ export const Game: React.FC = () => {
   return (
     <LayoutWrapper>
       {!isBoard && <BoardCreator setNewBoard={setBoard} />}
+      {isBoard && <BoardPlay />}
     </LayoutWrapper>
   );
 };

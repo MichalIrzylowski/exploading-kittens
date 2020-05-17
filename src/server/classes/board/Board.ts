@@ -50,15 +50,15 @@ export class Board extends EventEmitter implements IBoard {
       type: payloadTypes.newPlayer,
       payload: this.id,
     });
-    this.broadCastGameMessage(
-      payloadTypes.newPlayer,
-      player.getIdentification()
-    );
+
+    this.broadCastSnacks(payloadTypes.newPlayerSnackSuccess);
 
     const isReadyToStart = this.gameStage === gameStages.notAbleToStart;
     const are2Players = this.players.length >= 2;
 
-    player.send(payloadTypes.joinedGame);
+    player.snackMessage(payloadTypes.joinedBoardSnackSuccess, 'main', {
+      boardId: this.id,
+    });
     if (player.sockets.game?.readyState !== socketStates.open) {
       player.send(payloadTypes.gameReadyToStart);
     }
@@ -92,7 +92,8 @@ export class Board extends EventEmitter implements IBoard {
       type: payloadTypes.playerLeftBoard,
       payload: this.id,
     });
-    this.broadCastGameMessage(payloadTypes.playerLeftBoard, id);
+
+    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo);
 
     if (this.players.length < 2) {
       this.gameStage = gameStages.notAbleToStart;
@@ -107,6 +108,13 @@ export class Board extends EventEmitter implements IBoard {
   ) {
     players.forEach((player) => {
       player.gameMessage(type, payload);
+    });
+  }
+
+  broadCastSnacks(type: payloadTypes, payload?: any, players = this.players) {
+    console.log(type);
+    players.forEach((player) => {
+      player.snackMessage(type, 'game', payload);
     });
   }
 
