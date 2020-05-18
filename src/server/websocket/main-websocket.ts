@@ -9,7 +9,15 @@ import { createMessage } from '@shared/helpers/create-message';
 
 import { boards, players } from './ws-data';
 
-const fakeNames = ['Marian', 'Zenek', 'Miłosz', 'Tobiasz', 'Borys'];
+const fakeNames = [
+  'Marian',
+  'Zenek',
+  'Miłosz',
+  'Tobiasz',
+  'Borys',
+  'Angelini',
+  'Michałek',
+];
 
 export const mainConnection = (socket: WebSocket) => {
   sendBoards(socket, boards);

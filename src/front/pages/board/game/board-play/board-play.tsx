@@ -33,19 +33,19 @@ export const BoardPlay: React.FC = () => {
   const gameWS = useBoardWebsocket();
   const mainWS = useMainWebsocket();
 
-  const handleAddMessage = (data: any) => {
+  const handleSnackBar = (data: any) => {
     const newMessage = snackMessageCreator(
       translations[data.message],
       data.severity
     );
-    setSnackPack((prevValue) => [...prevValue, newMessage]);
+    setSnackPack([...snackPack, newMessage]);
   };
   const handleBoardCreation = (data: any) => {
     const currentUser = JSON.parse(
       sessionStorage.getItem(sessionStorageItems.user) as string
     ) as IPlayer;
     setPlayers([currentUser]);
-    handleAddMessage(data);
+    handleSnackBar(data);
   };
   const handleJoinBoardMessage = ({
     boardId,
@@ -54,38 +54,28 @@ export const BoardPlay: React.FC = () => {
     ...restData
   }: any) => {
     sessionStorage.setItem(sessionStorageItems.currentGame, boardId);
-    handleAddMessage(restData);
-
     if (isReadyToStart) setGameStage(gameStages.readyToStart);
-    setPlayers(() => {
-      if (
-        gameStage === gameStages.notAbleToStart &&
-        currentPlayers.length < 1
-      ) {
-        setGameStage(gameStages.readyToStart);
-      }
-      return currentPlayers;
-    });
+    setPlayers(currentPlayers);
+    handleSnackBar(restData);
   };
   const handleGameStageUpdate = (data: gameStages) => {
-    console.log(data);
     setGameStage(data);
   };
   const handleJoinPlayer = ({ currentPlayers, ...restData }: any) => {
     setPlayers(currentPlayers);
-    handleAddMessage(restData);
+    handleSnackBar(restData);
   };
 
-  mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
-
-  gameWS.on(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
-  gameWS.on(payloadTypes.playerLeftBoardSnackInfo, handleAddMessage);
-  gameWS.on(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
-  gameWS.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
-  gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
-  gameWS.on(payloadTypes.gameStarted, handleGameStageUpdate);
-
   useEffect(() => {
+    mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
+
+    gameWS.on(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
+    gameWS.on(payloadTypes.playerLeftBoardSnackInfo, handleSnackBar);
+    gameWS.on(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
+    gameWS.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
+    gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
+    gameWS.on(payloadTypes.gameStarted, handleGameStageUpdate);
+
     return () => {
       mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
     };
