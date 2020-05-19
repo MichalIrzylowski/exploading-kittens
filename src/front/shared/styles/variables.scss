@@ -1,7 +1,8 @@
 $gray: #4a4a4a;
 $white: #ffffff;
 $green: #2ec4b6;
-$oragne: #ee2f28; // maybe another red?
+$light-green: #4caf50;
+$lighter-red: #ee2f28;
 $yellow: #f5b42b;
 $light-red: #ab1e22;
 $red: #660d0e;
@@ -19,4 +20,4 @@ $radius: 5px;
 $shadow: 0px 5px 20px -5px rgba(0, 0, 0, 0.5);
 
 // button colors:
-$success-button: #4caf50;
+$success-button: $light-green;

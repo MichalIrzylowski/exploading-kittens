@@ -1,0 +1,29 @@
+@import '../../shared/styles/variables.scss';
+
+$avatar-size: 20px;
+$online-size: 7px;
+
+.avatar {
+  background-color: $gray;
+  border-radius: 50%;
+  display: inline-block;
+  height: $avatar-size;
+  width: $avatar-size;
+  margin-right: 20px;
+  position: relative;
+}
+
+.online {
+  position: absolute;
+  background-color: $light-green;
+  height: $online-size;
+  width: $online-size;
+  border: 1px solid $white;
+  border-radius: 50%;
+  bottom: 0;
+  right: 0;
+
+  &.not-online {
+    background-color: $lighter-red;
+  }
+}

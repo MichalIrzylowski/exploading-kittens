@@ -3,21 +3,32 @@ import classNames from 'classnames';
 
 import css from './list.scss';
 
-interface IList {
+interface IListStyles {
   className?: string;
   noListStyle?: boolean;
   noMargin?: boolean;
+  horizontal?: boolean;
+  distributed?: boolean;
+}
+
+interface IList extends IListStyles {
   type: 'ul' | 'ol';
 }
 
-export const List: React.FC<IList> = ({ type, children, ...restProps }) => {
-  const { className, noListStyle, noMargin } = restProps;
-  const listClassName = classNames(
-    { [css.noListStyle]: noListStyle, [css.noMargin]: noMargin },
-    className
+const getStyles = (props: IListStyles) => {
+  return classNames(
+    {
+      [css.noListStyle]: props.noListStyle,
+      [css.noMargin]: props.noMargin,
+      [css.horizontal]: props.horizontal,
+      [css.horizontalDistributed]: props.distributed,
+    },
+    props.className
   );
-  return React.createElement(type, { className: listClassName }, children);
 };
+
+export const List: React.FC<IList> = ({ type, children, ...restProps }) =>
+  React.createElement(type, { className: getStyles(restProps) }, children);
 
 List.defaultProps = {
   noListStyle: true,

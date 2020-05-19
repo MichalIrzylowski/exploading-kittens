@@ -55,6 +55,7 @@ export const BoardPlay: React.FC = () => {
     handleSnackBar(restData);
   };
   const handleGameStageUpdate = (data: gameStages) => {
+    console.log(data);
     setGameStage(data);
   };
   const handleJoinPlayer = ({ currentPlayers, ...restData }: any) => {
@@ -65,12 +66,25 @@ export const BoardPlay: React.FC = () => {
     setGameStage(gameStages.started);
     handleSnackBar(data);
   };
+  const handlePlayerLeave = ({ id, isStarted, ...restData }: any) => {
+    setPlayers((prevState) => {
+      console.log(prevState, players);
+      return isStarted
+        ? prevState.map((player) => {
+            const newPlayer = Object.assign(player);
+            if (player.id === id) newPlayer.isOnline = false;
+            return newPlayer;
+          })
+        : prevState.filter((player) => player.id !== id);
+    });
+    handleSnackBar(restData);
+  };
 
   useEffect(() => {
     mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
 
     gameWS.on(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
-    gameWS.on(payloadTypes.playerLeftBoardSnackInfo, handleSnackBar);
+    gameWS.on(payloadTypes.playerLeftBoardSnackInfo, handlePlayerLeave);
     gameWS.on(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
     gameWS.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
     gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
@@ -81,6 +95,8 @@ export const BoardPlay: React.FC = () => {
       mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
     };
   }, []);
+
+  console.log(players, gameStage);
 
   return (
     <div>

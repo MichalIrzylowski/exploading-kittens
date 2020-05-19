@@ -5,3 +5,11 @@
 .no-margin {
   margin: 0;
 }
+
+.horizontal {
+  display: flex;
+
+  &.horizontal-distributed {
+    justify-content: space-between;
+  }
+}

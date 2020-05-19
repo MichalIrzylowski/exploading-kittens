@@ -8,13 +8,11 @@ import { sessionStorageItems } from '@front/shared/types';
 import { payloadTypes } from '@shared/payload-types';
 import { gameStages } from '@shared/game-stages';
 
+import { PlayersList, IPlayer } from './players-list';
+
 import * as localizations from './resources/localizations';
 
-export interface IPlayer {
-  id: string;
-  name: string;
-  isOnline: boolean;
-}
+export { IPlayer };
 
 interface IGameArea {
   players: IPlayer[];
@@ -32,6 +30,7 @@ export const GameArea: React.FC<IGameArea> = (props) => {
   const handleStartGame = () => ws.send(payloadTypes.startGame, boardId);
 
   const isReadyToStart = props.gameStage === gameStages.readyToStart;
+  const didGameStart = props.gameStage === gameStages.started;
 
   return (
     <div>
@@ -39,6 +38,11 @@ export const GameArea: React.FC<IGameArea> = (props) => {
         <Button onClick={handleStartGame} appearance={buttonAppearance.success}>
           {translations.startGame}
         </Button>
+      )}
+      {didGameStart && (
+        <div>
+          <PlayersList players={props.players} />
+        </div>
       )}
     </div>
   );

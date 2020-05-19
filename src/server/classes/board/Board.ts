@@ -46,9 +46,10 @@ export class Board extends EventEmitter implements IBoard {
       payload: this.id,
     });
 
-    const currentPlayers = this.players.map((player) =>
-      player.getIdentification()
-    );
+    const currentPlayers = this.players.map((player) => ({
+      isOnline: player.sockets.main.readyState === socketStates.open,
+      ...player.getIdentification(),
+    }));
     this.broadCastSnacks(payloadTypes.playerJoinedSnackSuccess, {
       currentPlayers,
     });
@@ -81,6 +82,8 @@ export class Board extends EventEmitter implements IBoard {
       return boards.delete(this.id);
     }
 
+    const isGameStarted = this.gameStage === gameStages.started;
+
     this.players = this.players.filter(
       (player) => player.getIdentification().id !== id
     );
@@ -90,9 +93,12 @@ export class Board extends EventEmitter implements IBoard {
       payload: this.id,
     });
 
-    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo, id);
+    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo, {
+      id,
+      isStarted: isGameStarted,
+    });
 
-    if (this.players.length < 2 && this.gameStage !== gameStages.started) {
+    if (this.players.length < 2 && !isGameStarted) {
       this.gameStage = gameStages.notAbleToStart;
       this.broadCastGameMessage(
         payloadTypes.gameNotAbleToStart,
