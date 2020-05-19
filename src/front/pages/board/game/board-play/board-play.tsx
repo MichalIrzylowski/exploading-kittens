@@ -15,13 +15,9 @@ import { sessionStorageItems } from '@front/shared/types';
 import { gameStages } from '@shared/game-stages';
 import { payloadTypes } from '@shared/payload-types';
 
+import { GameArea, IPlayer } from './game-area';
 import { snackMessageCreator } from './helpers/message-creator';
 import * as localizations from './resources/localizations';
-
-interface IPlayer {
-  id: string;
-  name: string;
-}
 
 export const BoardPlay: React.FC = () => {
   const translations = translate(localizations);
@@ -65,6 +61,10 @@ export const BoardPlay: React.FC = () => {
     setPlayers(currentPlayers);
     handleSnackBar(restData);
   };
+  const handleStartGame = (data: any) => {
+    setGameStage(gameStages.started);
+    handleSnackBar(data);
+  };
 
   useEffect(() => {
     mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
@@ -75,6 +75,7 @@ export const BoardPlay: React.FC = () => {
     gameWS.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
     gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
     gameWS.on(payloadTypes.gameStarted, handleGameStageUpdate);
+    gameWS.on(payloadTypes.gameStartedSnackSuccess, handleStartGame);
 
     return () => {
       mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
@@ -84,6 +85,7 @@ export const BoardPlay: React.FC = () => {
   return (
     <div>
       <h1>{translations[gameStage]}</h1>
+      <GameArea players={players} gameStage={gameStage} />
       <SnackBarGroup snackPack={snackPack} setSnackPack={setSnackPack} />
     </div>
   );

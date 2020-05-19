@@ -30,7 +30,11 @@ export const readyToStart: TranslationToken = {
   'pl-PL': 'Gra gotowa do rozpoczęcia!',
 };
 
-export const started: TranslationToken = {
+export const gameStartedSnack: TranslationToken = {
   'en-US': 'Game started!',
   'pl-PL': 'Gra rozpoczęta!',
+};
+
+export const started: TranslationToken = {
+  ...gameStartedSnack,
 };

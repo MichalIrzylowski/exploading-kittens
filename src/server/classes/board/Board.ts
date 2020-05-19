@@ -90,14 +90,22 @@ export class Board extends EventEmitter implements IBoard {
       payload: this.id,
     });
 
-    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo);
+    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo, id);
 
-    if (this.players.length < 2) {
+    if (this.players.length < 2 && this.gameStage !== gameStages.started) {
       this.gameStage = gameStages.notAbleToStart;
       this.broadCastGameMessage(
         payloadTypes.gameNotAbleToStart,
         payloadTypes.gameNotAbleToStart
       );
+    }
+  }
+
+  startGame() {
+    if (this.gameStage === gameStages.readyToStart) {
+      this.gameStage = gameStages.started;
+
+      this.broadCastSnacks(payloadTypes.gameStartedSnackSuccess);
     }
   }
 

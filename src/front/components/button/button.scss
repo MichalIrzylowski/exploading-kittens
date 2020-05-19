@@ -1,5 +1,16 @@
 @import '../../shared/styles/variables.scss';
 
+@mixin button-standard {
+  cursor: pointer;
+  border-radius: $radius;
+  padding: 10px 20px;
+  border: none;
+}
+
+@function button-border($color) {
+  @return 2px solid $color;
+}
+
 .none {
   background: transparent;
   border: none;
@@ -7,7 +18,17 @@
 
 .primary {
   background-color: $white;
-  padding: 10px;
-  border: 2px solid $gray;
-  border-radius: $radius;
+  border: button-border($gray);
+
+  @include button-standard;
+}
+
+.success {
+  background-color: $success-button;
+
+  @include button-standard;
+}
+
+.filled {
+  color: $white;
 }

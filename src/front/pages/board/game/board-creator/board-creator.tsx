@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 
+import Button from '@material-ui/core/Button';
+
 import { useBoardWebsocket } from '@front/contexts/board-websocket';
-import { Button, buttonAppearance } from '@front/components/button';
 import { sessionStorageItems } from '@front/shared/types';
 
 import { customEvents } from '@shared/events';
@@ -36,7 +37,7 @@ export const BoardCreator: React.FC<IBoardCreator> = ({ setNewBoard }) => {
     };
   }, []);
   return (
-    <Button appearance={buttonAppearance.primary} onClick={handleClick}>
+    <Button variant="contained" disableElevation={true} onClick={handleClick}>
       Create Game
     </Button>
   );

@@ -1,26 +1,39 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import css, { cssExports } from './button.scss';
+import css from './button.scss';
 
 export enum buttonAppearance {
   none = 'none',
   primary = 'primary',
+  success = 'success',
 }
 
-interface IButton {
+interface IButtonStyles {
   appearance: buttonAppearance;
+  outlined?: boolean;
   className?: string;
+}
+
+interface IButton extends IButtonStyles {
   onClick: () => void;
 }
 
-export const Button: React.FC<IButton> = (props) => {
+const getStyles = (props: IButtonStyles) =>
+  classNames(
+    css[props.appearance],
+    { [css.filled]: !props.outlined },
+    props.className
+  );
+
+export const Button: React.FC<IButton> = ({
+  children,
+  onClick,
+  ...styleProps
+}) => {
   return (
-    <button
-      className={classNames(css[props.appearance], props.className)}
-      onClick={props.onClick}
-    >
-      {props.children}
+    <button className={getStyles(styleProps)} onClick={onClick}>
+      {children}
     </button>
   );
 };

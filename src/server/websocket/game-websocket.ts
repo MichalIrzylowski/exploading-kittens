@@ -16,6 +16,11 @@ export const gameConnection = (socket: WebSocket) => {
     const message = JSON.parse(data as any);
 
     switch (message.type) {
+      case payloadTypes.registerUser:
+        const registeringPlayer = players.get(message.payload.id) as Player;
+        registeringPlayer.sockets.game = socket;
+        break;
+
       case payloadTypes.createBoard:
         const boardId = uuid();
         const { id } = message.payload;
@@ -62,9 +67,8 @@ export const gameConnection = (socket: WebSocket) => {
         boards.get(message.payload.boardId)?.addPlayer(joiningPlayer);
         break;
 
-      case payloadTypes.registerUser:
-        const registeringPlayer = players.get(message.payload.id) as Player;
-        registeringPlayer.sockets.game = socket;
+      case payloadTypes.startGame:
+        boards.get(message.payload)?.startGame();
         break;
 
       default:
