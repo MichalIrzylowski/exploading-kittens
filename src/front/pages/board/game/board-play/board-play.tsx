@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-import {
-  SnackBarGroup,
-  SnackbarMessage,
-} from '@front/components/snack-bar-group';
+import { SnackBarGroup, SnackbarMessage } from '@front/components/snack-bar-group';
+import { Button, buttonAppearance } from '@front/components/button';
 
 import { useBoardWebsocket } from '@front/contexts/board-websocket';
 import { useMainWebsocket } from '@front/contexts/main-websocket';
@@ -18,34 +16,25 @@ import { payloadTypes } from '@shared/payload-types';
 import { GameArea, IPlayer } from './game-area';
 import { snackMessageCreator } from './helpers/message-creator';
 import * as localizations from './resources/localizations';
+import css from './board-play.scss';
 
 export const BoardPlay: React.FC = () => {
   const translations = translate(localizations);
   const [snackPack, setSnackPack] = useState<SnackbarMessage[]>([]);
-  const [gameStage, setGameStage] = useState<gameStages>(
-    gameStages.notAbleToStart
-  );
+  const [gameStage, setGameStage] = useState<gameStages>(gameStages.notAbleToStart);
   const [players, setPlayers] = useState<IPlayer[]>([]);
   const gameWS = useBoardWebsocket();
   const mainWS = useMainWebsocket();
 
   const handleSnackBar = (data: any) => {
-    const newMessage = snackMessageCreator(
-      translations[data.message],
-      data.severity
-    );
+    const newMessage = snackMessageCreator(translations[data.message], data.severity);
     setSnackPack([...snackPack, newMessage]);
   };
   const handleBoardCreation = (data: any) => {
     setPlayers([]);
     handleSnackBar(data);
   };
-  const handleJoinBoardMessage = ({
-    boardId,
-    isReadyToStart,
-    currentPlayers,
-    ...restData
-  }: any) => {
+  const handleJoinBoardMessage = ({ boardId, isReadyToStart, currentPlayers, ...restData }: any) => {
     sessionStorage.setItem(sessionStorageItems.currentGame, boardId);
     if (isReadyToStart) setGameStage(gameStages.readyToStart);
 
@@ -75,6 +64,8 @@ export const BoardPlay: React.FC = () => {
     );
     handleSnackBar(restData);
   };
+  const handleClick = () =>
+    gameWS.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame));
 
   useEffect(() => {
     mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
@@ -93,10 +84,17 @@ export const BoardPlay: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h1>{translations[gameStage]}</h1>
-      <GameArea players={players} gameStage={gameStage} />
+    <>
+      <div className={css.header}>
+        <h1>{translations[gameStage]}</h1>
+        {gameStage === gameStages.readyToStart && (
+          <Button onClick={handleClick} appearance={buttonAppearance.success}>
+            {translations.startGame}
+          </Button>
+        )}
+      </div>
+      <GameArea players={players} />
       <SnackBarGroup snackPack={snackPack} setSnackPack={setSnackPack} />
-    </div>
+    </>
   );
 };
