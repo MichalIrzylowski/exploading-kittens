@@ -37,10 +37,7 @@ export const BoardPlay: React.FC = () => {
     setSnackPack([...snackPack, newMessage]);
   };
   const handleBoardCreation = (data: any) => {
-    const currentUser = JSON.parse(
-      sessionStorage.getItem(sessionStorageItems.user) as string
-    ) as IPlayer;
-    setPlayers([currentUser]);
+    setPlayers([]);
     handleSnackBar(data);
   };
   const handleJoinBoardMessage = ({
@@ -51,11 +48,11 @@ export const BoardPlay: React.FC = () => {
   }: any) => {
     sessionStorage.setItem(sessionStorageItems.currentGame, boardId);
     if (isReadyToStart) setGameStage(gameStages.readyToStart);
+
     setPlayers(currentPlayers);
     handleSnackBar(restData);
   };
   const handleGameStageUpdate = (data: gameStages) => {
-    console.log(data);
     setGameStage(data);
   };
   const handleJoinPlayer = ({ currentPlayers, ...restData }: any) => {
@@ -67,16 +64,15 @@ export const BoardPlay: React.FC = () => {
     handleSnackBar(data);
   };
   const handlePlayerLeave = ({ id, isStarted, ...restData }: any) => {
-    setPlayers((prevState) => {
-      console.log(prevState, players);
-      return isStarted
+    setPlayers((prevState) =>
+      isStarted
         ? prevState.map((player) => {
             const newPlayer = Object.assign(player);
             if (player.id === id) newPlayer.isOnline = false;
             return newPlayer;
           })
-        : prevState.filter((player) => player.id !== id);
-    });
+        : prevState.filter((player) => player.id !== id)
+    );
     handleSnackBar(restData);
   };
 
@@ -95,8 +91,6 @@ export const BoardPlay: React.FC = () => {
       mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
     };
   }, []);
-
-  console.log(players, gameStage);
 
   return (
     <div>

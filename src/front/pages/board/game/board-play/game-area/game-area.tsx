@@ -9,6 +9,7 @@ import { payloadTypes } from '@shared/payload-types';
 import { gameStages } from '@shared/game-stages';
 
 import { PlayersList, IPlayer } from './players-list';
+import { PlayerPanel } from './player-panel';
 
 import * as localizations from './resources/localizations';
 
@@ -33,17 +34,18 @@ export const GameArea: React.FC<IGameArea> = (props) => {
   const didGameStart = props.gameStage === gameStages.started;
 
   return (
-    <div>
+    <>
       {isReadyToStart && (
         <Button onClick={handleStartGame} appearance={buttonAppearance.success}>
           {translations.startGame}
         </Button>
       )}
       {didGameStart && (
-        <div>
+        <>
           <PlayersList players={props.players} />
-        </div>
+          <PlayerPanel />
+        </>
       )}
-    </div>
+    </>
   );
 };
