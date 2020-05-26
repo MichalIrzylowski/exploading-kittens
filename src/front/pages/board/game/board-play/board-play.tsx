@@ -13,7 +13,7 @@ import { sessionStorageItems } from '@front/shared/types';
 import { gameStages } from '@shared/game-stages';
 import { payloadTypes } from '@shared/payload-types';
 
-import { GameArea, IPlayer } from './game-area';
+import { GameArea, IPlayer, ICard } from './game-area';
 import { snackMessageCreator } from './helpers/message-creator';
 import * as localizations from './resources/localizations';
 import css from './board-play.scss';
@@ -23,6 +23,8 @@ export const BoardPlay: React.FC = () => {
   const [snackPack, setSnackPack] = useState<SnackbarMessage[]>([]);
   const [gameStage, setGameStage] = useState<gameStages>(gameStages.notAbleToStart);
   const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [cards, setCards] = useState<ICard[]>([]);
+  const [leftCards, setLeftCards] = useState(56);
   const gameWS = useBoardWebsocket();
   const mainWS = useMainWebsocket();
 
@@ -64,6 +66,11 @@ export const BoardPlay: React.FC = () => {
     );
     handleSnackBar(restData);
   };
+  const handleInitialHand = ({ initialhand, deckCards }: any) => {
+    setCards(initialhand);
+    setLeftCards(deckCards);
+  };
+
   const handleClick = () =>
     gameWS.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame));
 
@@ -77,6 +84,7 @@ export const BoardPlay: React.FC = () => {
     gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
     gameWS.on(payloadTypes.gameStarted, handleGameStageUpdate);
     gameWS.on(payloadTypes.gameStartedSnackSuccess, handleStartGame);
+    gameWS.on(payloadTypes.initialHand, handleInitialHand);
 
     return () => {
       mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
@@ -93,7 +101,7 @@ export const BoardPlay: React.FC = () => {
           </Button>
         )}
       </div>
-      <GameArea players={players} />
+      <GameArea players={players} cards={cards} />
       <SnackBarGroup snackPack={snackPack} setSnackPack={setSnackPack} />
     </>
   );

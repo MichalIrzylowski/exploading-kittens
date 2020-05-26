@@ -12,6 +12,7 @@ export interface IPlayer {
   id: string;
   name: string;
   isOnline: boolean;
+  handLength: number;
 }
 
 interface IPlayersList {
@@ -19,9 +20,7 @@ interface IPlayersList {
 }
 
 export const PlayersList: React.FC<IPlayersList> = ({ players }) => {
-  const playerId = JSON.parse(
-    sessionStorage.getItem(sessionStorageItems.user) as string
-  ).id;
+  const playerId = JSON.parse(sessionStorage.getItem(sessionStorageItems.user) as string).id;
   return (
     <List type="ul" horizontal={true} distributed={true}>
       {players.map((player) => {

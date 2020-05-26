@@ -110,14 +110,16 @@ export class Board extends EventEmitter implements IBoard {
 
     this.players.forEach((player) => {
       const initialhand = this.deck.prepareInitialHand();
-      player.gameMessage(payloadTypes.initialHand, initialhand);
+      const deckCards = this.deck.cards.length;
+
+      player.gameMessage(payloadTypes.initialHand, { initialhand, deckCards });
 
       const restPlayers = this.players.filter(
         (otherPlayer) => otherPlayer.getIdentification().id !== player.getIdentification().id
       );
       this.broadCastGameMessage(
         payloadTypes.otherPlayerRecivedCard,
-        { cardsLength: initialhand.length, player: player.getIdentification().id, deckCards: this.deck.cards.length },
+        { cardsLength: initialhand.length, player: player.getIdentification().id, deckCards },
         restPlayers
       );
     });
@@ -132,7 +134,6 @@ export class Board extends EventEmitter implements IBoard {
   }
 
   broadCastSnacks(type: payloadTypes, payload?: any, players = this.players) {
-    console.log(type);
     players.forEach((player) => {
       player.snackMessage(type, 'game', payload);
     });
