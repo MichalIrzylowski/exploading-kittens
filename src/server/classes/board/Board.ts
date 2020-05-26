@@ -64,10 +64,7 @@ export class Board extends EventEmitter implements IBoard {
 
     if (this.gameStage === gameStages.notAbleToStart && isReadyToStart) {
       this.gameStage = gameStages.readyToStart;
-      this.broadCastGameMessage(
-        payloadTypes.gameReadyToStart,
-        gameStages.readyToStart
-      );
+      this.broadCastGameMessage(payloadTypes.gameReadyToStart, gameStages.readyToStart);
       return;
     }
   }
@@ -84,9 +81,7 @@ export class Board extends EventEmitter implements IBoard {
 
     const isGameStarted = this.gameStage === gameStages.started;
 
-    this.players = this.players.filter(
-      (player) => player.getIdentification().id !== id
-    );
+    this.players = this.players.filter((player) => player.getIdentification().id !== id);
 
     broadCastToAllUsers(players, {
       type: payloadTypes.playerLeftBoard,
@@ -100,10 +95,7 @@ export class Board extends EventEmitter implements IBoard {
 
     if (this.players.length < 2 && !isGameStarted) {
       this.gameStage = gameStages.notAbleToStart;
-      this.broadCastGameMessage(
-        payloadTypes.gameNotAbleToStart,
-        payloadTypes.gameNotAbleToStart
-      );
+      this.broadCastGameMessage(payloadTypes.gameNotAbleToStart, payloadTypes.gameNotAbleToStart);
     }
   }
 
@@ -113,13 +105,27 @@ export class Board extends EventEmitter implements IBoard {
 
       this.broadCastSnacks(payloadTypes.gameStartedSnackSuccess);
     }
+
+    this.deck.shuffle();
+
+    this.players.forEach((player) => {
+      const initialhand = this.deck.prepareInitialHand();
+      player.gameMessage(payloadTypes.initialHand, initialhand);
+
+      const restPlayers = this.players.filter(
+        (otherPlayer) => otherPlayer.getIdentification().id !== player.getIdentification().id
+      );
+      this.broadCastGameMessage(
+        payloadTypes.otherPlayerRecivedCard,
+        { cardsLength: initialhand.length, player: player.getIdentification().id, deckCards: this.deck.cards.length },
+        restPlayers
+      );
+    });
+
+    this.deck.shuffle();
   }
 
-  broadCastGameMessage(
-    type: payloadTypes,
-    payload?: any,
-    players = this.players
-  ) {
+  broadCastGameMessage(type: payloadTypes, payload?: any, players = this.players) {
     players.forEach((player) => {
       player.gameMessage(type, payload);
     });

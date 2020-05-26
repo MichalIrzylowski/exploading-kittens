@@ -14,6 +14,8 @@ export enum payloadTypes {
   gameStarted = 'started',
   startGame = 'start-game',
   gameStartedSnackSuccess = 'gameStartedSnack-success',
+  initialHand = 'initial-hand',
+  otherPlayerRecivedCard = 'other-player-recieved-card',
 
   joinedBoardSnackSuccess = 'joinedBoardSnack-success',
   joinGame = 'join-game',
