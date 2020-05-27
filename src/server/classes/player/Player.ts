@@ -9,24 +9,17 @@ import { IPlayerID, PlayerIdentification } from './PlayerIdentification';
 
 interface IPlayer {
   data: PlayerIdentification;
-  sockets: {
-    main: WebSocket;
-    game?: WebSocket;
-  };
+  socket: WebSocket;
   isPlaying: string;
 }
-
-export type TSocket = 'main' | 'game';
 
 export class Player implements IPlayer {
   constructor(playerId: IPlayerID, socket: WebSocket) {
     this.data = new PlayerIdentification(playerId);
-    this.sockets = {
-      main: socket,
-    };
+    this.socket = socket;
     this.isPlaying = '';
 
-    this.sockets.main.addEventListener('close', () => {
+    this.socket.addEventListener('close', () => {
       if (this.isPlaying) {
         boards.get(this.isPlaying)?.removePlayer(this.getIdentification().id);
       }
@@ -40,27 +33,24 @@ export class Player implements IPlayer {
   }
 
   send(type: payloadTypes, payload?: any) {
-    this.sockets.main.send(createMessage(type, payload));
+    this.socket.send(createMessage(type, payload));
   }
 
   gameMessage(type: payloadTypes, payload?: any) {
-    this.sockets.game?.send(createMessage(type, payload));
+    this.socket.send(createMessage(type, payload));
   }
 
-  snackMessage(type: payloadTypes, socketType: TSocket, payload?: {}) {
+  snackMessage(type: payloadTypes, payload?: {}) {
     const [message, severity] = type.split('-');
     const snackPayload = {
       message,
       severity,
       ...payload,
     };
-    this.sockets[socketType]?.send(createMessage(type, snackPayload));
+    this.socket.send(createMessage(type, snackPayload));
   }
 
   data: PlayerIdentification;
   isPlaying: string;
-  sockets: {
-    main: WebSocket;
-    game?: WebSocket;
-  };
+  socket: WebSocket;
 }

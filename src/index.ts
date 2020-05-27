@@ -11,9 +11,8 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { mainConnection } from '@server/websocket';
-import { gameConnection } from '@server/websocket';
 
-import { homePage, board } from '@shared/urls';
+import { homePage } from '@shared/urls';
 
 import webpackConfig from '../webpack.config';
 
@@ -65,8 +64,6 @@ server.on('upgrade', (request, socket, head) => {
 
   if (pathname === homePage) {
     wss.handleUpgrade(request, socket, head, mainConnection);
-  } else if (pathname === board) {
-    wssGame.handleUpgrade(request, socket, head, gameConnection);
   } else {
     socket.destroy();
   }

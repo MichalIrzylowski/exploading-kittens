@@ -1,5 +1,3 @@
-import EventEmitter from 'eventemitter3';
-
 import { Player } from '@server/classes/player';
 import { Deck } from '@server/classes/deck';
 import { players, boards } from '@server/websocket';
@@ -19,9 +17,8 @@ interface IBoard {
 
 const maxPlayers = 5;
 
-export class Board extends EventEmitter implements IBoard {
+export class Board implements IBoard {
   constructor(id: string, player: Player) {
-    super();
     this.id = id;
     this.players = [player];
     this.deck = new Deck();
@@ -47,7 +44,7 @@ export class Board extends EventEmitter implements IBoard {
     });
 
     const currentPlayers = this.players.map((player) => ({
-      isOnline: player.sockets.main.readyState === socketStates.open,
+      isOnline: player.socket.readyState === socketStates.open,
       ...player.getIdentification(),
     }));
     this.broadCastSnacks(payloadTypes.playerJoinedSnackSuccess, {
@@ -56,7 +53,7 @@ export class Board extends EventEmitter implements IBoard {
 
     const isReadyToStart = this.players.length > 1;
 
-    player.snackMessage(payloadTypes.joinedBoardSnackSuccess, 'main', {
+    player.snackMessage(payloadTypes.joinedBoardSnackSuccess, {
       boardId: this.id,
       isReadyToStart,
       currentPlayers,
@@ -135,7 +132,7 @@ export class Board extends EventEmitter implements IBoard {
 
   broadCastSnacks(type: payloadTypes, payload?: any, players = this.players) {
     players.forEach((player) => {
-      player.snackMessage(type, 'game', payload);
+      player.snackMessage(type, payload);
     });
   }
 
