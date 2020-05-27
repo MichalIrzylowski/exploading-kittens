@@ -1,10 +1,52 @@
 @import '../../shared/styles/variables.scss';
 
-$card-width: 200px;
+$card-width: 120px;
 
 .card {
   width: $card-width;
   height: ($fibonacci-factor * $card-width);
   border: 1px solid $gray;
   border-radius: $radius;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+}
+
+.orange {
+  background-color: $card-orange;
+}
+
+.grey {
+  background-color: $card-grey;
+}
+
+.green {
+  background-color: $card-green;
+}
+
+.none {
+  background-color: $card-none;
+}
+
+.black {
+  background-color: $card-black;
+}
+
+.red {
+  background-color: $card-red;
+}
+
+.pink {
+  background-color: $card-pink;
+}
+
+.brown {
+  background-color: $card-brown;
+}
+
+.blue {
+  background-color: $card-blue;
 }

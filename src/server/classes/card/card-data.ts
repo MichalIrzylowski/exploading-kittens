@@ -2,7 +2,7 @@ export enum cardTypes {
   attack = 'attack',
   cats = 'cats',
   diffuse = 'diffuse',
-  exploading = 'exploading',
+  exploading = 'exploding',
   favor = 'favor',
   nope = 'nope',
   seeTheFuture = 'seeTheFuture',
