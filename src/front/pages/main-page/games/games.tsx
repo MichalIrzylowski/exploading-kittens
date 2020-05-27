@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { useMainWebsocket } from '@front/contexts/main-websocket';
+import { useWebSocket } from '@front/contexts/main-websocket';
 import { translate } from '@front/utils/translate';
 import { BrowserPaper } from '@front/components/browser-paper';
 
@@ -13,14 +13,13 @@ import css from './games.scss';
 import { board } from '@shared/urls';
 
 export const Games = () => {
-  const ws = useMainWebsocket();
+  const ws = useWebSocket();
   const [games, setGames] = useState<TBoard[]>([]);
   const translations = translate(localizations);
 
   const settingBoards = (boards: TBoard[]) => setGames(boards);
   const creatingGame = (board: TBoard) => setGames([...games, board]);
-  const deleteBoard = (boardId: string) =>
-    setGames((prevGames) => prevGames.filter((board) => board.id !== boardId));
+  const deleteBoard = (boardId: string) => setGames((prevGames) => prevGames.filter((board) => board.id !== boardId));
   const removePlayer = (boardId: string) => {
     setGames((prevGames) =>
       prevGames.map((board) => {

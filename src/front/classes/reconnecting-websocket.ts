@@ -14,8 +14,7 @@ interface IReconnectingWebsocket {
 const second = 1000;
 let timeout;
 
-export class ReconnectingWebsocket extends EventEmitter
-  implements IReconnectingWebsocket {
+export class ReconnectingWebsocket extends EventEmitter implements IReconnectingWebsocket {
   constructor(url: string) {
     super();
     this.url = url;
@@ -61,11 +60,6 @@ export class ReconnectingWebsocket extends EventEmitter
 
   send = (type: payloadTypes, payload?: any) => {
     this.socket?.send(createMessage(type, payload));
-  };
-
-  close = () => {
-    this.closeOnPurpose = true;
-    this.socket?.close();
   };
 
   closeOnPurpose: boolean;

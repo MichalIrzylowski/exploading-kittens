@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { MainWebsocketProvider } from '@front/contexts/main-websocket';
+import { WebSocketProvider } from '@front/contexts/main-websocket';
 
 import { Head } from '@front/components/head';
 import { TopBar } from '@front/components/top-bar';
@@ -18,7 +18,7 @@ import './main.scss';
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <MainWebsocketProvider>
+      <WebSocketProvider>
         <Head>
           <title>Exploding kittens</title>
         </Head>
@@ -28,7 +28,7 @@ export const App: React.FC = () => {
           <Route exact path={guide} component={Guide} />
           <Route exact path={board} component={Board} />
         </Switch>
-      </MainWebsocketProvider>
+      </WebSocketProvider>
     </BrowserRouter>
   );
 };

@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { SnackBarGroup, SnackbarMessage } from '@front/components/snack-bar-group';
 import { Button, buttonAppearance } from '@front/components/button';
 
-import { useBoardWebsocket } from '@front/contexts/board-websocket';
-import { useMainWebsocket } from '@front/contexts/main-websocket';
+import { useWebSocket } from '@front/contexts/main-websocket';
 
 import { translate } from '@front/utils/translate';
 
@@ -16,17 +15,16 @@ import { payloadTypes } from '@shared/payload-types';
 import { GameArea, IPlayer, ICard } from './game-area';
 import { snackMessageCreator } from './helpers/message-creator';
 import * as localizations from './resources/localizations';
-import css from './board-play.scss';
+import css from './player-view.scss';
 
-export const BoardPlay: React.FC = () => {
+export const PlayerView: React.FC = () => {
   const translations = translate(localizations);
   const [snackPack, setSnackPack] = useState<SnackbarMessage[]>([]);
   const [gameStage, setGameStage] = useState<gameStages>(gameStages.notAbleToStart);
   const [players, setPlayers] = useState<IPlayer[]>([]);
   const [cards, setCards] = useState<ICard[]>([]);
   const [leftCards, setLeftCards] = useState(56);
-  const gameWS = useBoardWebsocket();
-  const mainWS = useMainWebsocket();
+  const ws = useWebSocket();
 
   const handleSnackBar = (data: any) => {
     const newMessage = snackMessageCreator(translations[data.message], data.severity);
@@ -71,23 +69,29 @@ export const BoardPlay: React.FC = () => {
     setLeftCards(deckCards);
   };
 
-  const handleClick = () =>
-    gameWS.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame));
+  const handleClick = () => ws.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame));
 
   useEffect(() => {
-    mainWS.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
-
-    gameWS.on(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
-    gameWS.on(payloadTypes.playerLeftBoardSnackInfo, handlePlayerLeave);
-    gameWS.on(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
-    gameWS.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
-    gameWS.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
-    gameWS.on(payloadTypes.gameStarted, handleGameStageUpdate);
-    gameWS.on(payloadTypes.gameStartedSnackSuccess, handleStartGame);
-    gameWS.on(payloadTypes.initialHand, handleInitialHand);
+    ws.on(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
+    ws.on(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
+    ws.on(payloadTypes.playerLeftBoardSnackInfo, handlePlayerLeave);
+    ws.on(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
+    ws.on(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
+    ws.on(payloadTypes.gameReadyToStart, handleGameStageUpdate);
+    ws.on(payloadTypes.gameStarted, handleGameStageUpdate);
+    ws.on(payloadTypes.gameStartedSnackSuccess, handleStartGame);
+    ws.on(payloadTypes.initialHand, handleInitialHand);
 
     return () => {
-      mainWS.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
+      ws.off(payloadTypes.joinedBoardSnackSuccess, handleJoinBoardMessage);
+      ws.off(payloadTypes.boardCreatedSnackSuccess, handleBoardCreation);
+      ws.off(payloadTypes.playerLeftBoardSnackInfo, handlePlayerLeave);
+      ws.off(payloadTypes.playerJoinedSnackSuccess, handleJoinPlayer);
+      ws.off(payloadTypes.gameNotAbleToStart, handleGameStageUpdate);
+      ws.off(payloadTypes.gameReadyToStart, handleGameStageUpdate);
+      ws.off(payloadTypes.gameStarted, handleGameStageUpdate);
+      ws.off(payloadTypes.gameStartedSnackSuccess, handleStartGame);
+      ws.off(payloadTypes.initialHand, handleInitialHand);
     };
   }, []);
 

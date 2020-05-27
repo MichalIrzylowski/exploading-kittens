@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import { useBoardWebsocket } from '@front/contexts/board-websocket';
+import { useWebSocket } from '@front/contexts/main-websocket';
 import { sessionStorageItems } from '@front/shared/types';
 
 import { customEvents } from '@shared/events';
@@ -13,7 +13,7 @@ interface IBoardCreator {
 }
 
 export const BoardCreator: React.FC<IBoardCreator> = ({ setNewBoard }) => {
-  const ws = useBoardWebsocket();
+  const ws = useWebSocket();
 
   const handleClick = () => {
     const player = sessionStorage.getItem(sessionStorageItems.user);
