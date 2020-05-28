@@ -6,7 +6,6 @@ import { sessionStorageItems } from '@front/shared/types';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
 
 import { payloadTypes } from '@shared/payload-types';
-import { homePage } from '@shared/urls';
 
 import { BoardCreator } from './board-creator';
 import { PlayerView } from './player-view';
@@ -26,17 +25,25 @@ export const Board = () => {
       });
     }
 
-    history.listen((location) => {
-      console.log('change route');
-      if (location.pathname === homePage) {
+    const handleLeaveGame = () => {
+      const boardId = sessionStorage.getItem(sessionStorageItems.currentGame);
+
+      if (boardId) {
         const player = sessionStorage.getItem(sessionStorageItems.user) as string;
         const playerId = JSON.parse(player).id;
-        ws.send(payloadTypes.leaveGame, { playerId });
+        ws.send(payloadTypes.leaveGame, { playerId, boardId });
 
         sessionStorage.removeItem(sessionStorageItems.currentGame);
       }
-    });
-  }, []);
+    };
+    window.addEventListener('beforeunload', handleLeaveGame);
+
+    return () => {
+      handleLeaveGame();
+      window.removeEventListener('beforeunload', handleLeaveGame);
+    };
+  }, [history.location.pathname]);
+
   return (
     <main>
       <LayoutWrapper>
