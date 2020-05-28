@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { SnackBarGroup, SnackbarMessage } from '@front/components/snack-bar-group';
 import { Button, buttonAppearance } from '@front/components/button';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
+import { useSnackBar } from '@front/contexts/snack-bar-context';
 
 import { translate } from '@front/utils/translate';
 
@@ -19,16 +19,16 @@ import css from './player-view.scss';
 
 export const PlayerView: React.FC = () => {
   const translations = translate(localizations);
-  const [snackPack, setSnackPack] = useState<SnackbarMessage[]>([]);
   const [gameStage, setGameStage] = useState<gameStages>(gameStages.notAbleToStart);
   const [players, setPlayers] = useState<IPlayer[]>([]);
   const [cards, setCards] = useState<ICard[]>([]);
   const [leftCards, setLeftCards] = useState(56);
   const ws = useWebSocket();
+  const sendSnackBar = useSnackBar();
 
   const handleSnackBar = (data: any) => {
     const newMessage = snackMessageCreator(translations[data.message], data.severity);
-    setSnackPack([...snackPack, newMessage]);
+    sendSnackBar((snackPack) => [...snackPack, newMessage]);
   };
   const handleBoardCreation = (data: any) => {
     setPlayers([]);
@@ -106,7 +106,6 @@ export const PlayerView: React.FC = () => {
         )}
       </div>
       <GameArea players={players} cards={cards} />
-      <SnackBarGroup snackPack={snackPack} setSnackPack={setSnackPack} />
     </>
   );
 };

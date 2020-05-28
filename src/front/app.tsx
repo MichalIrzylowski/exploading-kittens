@@ -2,6 +2,7 @@ import React from 'react';
 
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import { SnackBarProvider } from '@front/contexts/snack-bar-context';
 import { WebSocketProvider } from '@front/contexts/main-websocket';
 
 import { Head } from '@front/components/head';
@@ -18,17 +19,19 @@ import './main.scss';
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <WebSocketProvider>
-        <Head>
-          <title>Exploding kittens</title>
-        </Head>
-        <TopBar />
-        <Switch>
-          <Route exact path={homePage} component={MainPage} />
-          <Route exact path={guide} component={Guide} />
-          <Route exact path={board} component={Board} />
-        </Switch>
-      </WebSocketProvider>
+      <SnackBarProvider>
+        <WebSocketProvider>
+          <Head>
+            <title>Exploding kittens</title>
+          </Head>
+          <TopBar />
+          <Switch>
+            <Route exact path={homePage} component={MainPage} />
+            <Route exact path={guide} component={Guide} />
+            <Route exact path={board} component={Board} />
+          </Switch>
+        </WebSocketProvider>
+      </SnackBarProvider>
     </BrowserRouter>
   );
 };
