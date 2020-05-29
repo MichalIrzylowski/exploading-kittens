@@ -4,6 +4,7 @@ import { players, boards } from '@server/websocket';
 
 import { createMessage } from '@shared/helpers/create-message';
 import { payloadTypes } from '@shared/payload-types';
+import { IGameMessagePayload, ISnackMessage } from '@shared/interfaces';
 
 import { IPlayerID, PlayerIdentification } from './PlayerIdentification';
 import { Card } from '../card';
@@ -22,6 +23,7 @@ export class Player implements IPlayer {
     this.isPlaying = '';
 
     this.socket.addEventListener('close', () => {
+      console.warn('Player.ts closing', this.isPlaying.length);
       if (this.isPlaying) {
         boards.get(this.isPlaying)?.removePlayer(this.getIdentification().id);
       }
@@ -38,18 +40,12 @@ export class Player implements IPlayer {
     this.socket.send(createMessage(type, payload));
   }
 
-  gameMessage(type: payloadTypes, payload?: any) {
-    this.socket.send(createMessage(type, payload));
+  gameMessage(payload: IGameMessagePayload) {
+    this.socket.send(createMessage(payloadTypes.game, payload));
   }
 
-  snackMessage(type: payloadTypes, payload?: {}) {
-    const [message, severity] = type.split('-');
-    const snackPayload = {
-      message,
-      severity,
-      ...payload,
-    };
-    this.socket.send(createMessage(type, snackPayload));
+  snackMessage(payload: ISnackMessage) {
+    this.socket.send(createMessage(payloadTypes.snack, payload));
   }
 
   data: PlayerIdentification;

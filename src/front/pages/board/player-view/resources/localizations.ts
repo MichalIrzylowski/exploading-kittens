@@ -10,7 +10,7 @@ export const playerLeftBoardSnack: TranslationToken = {
   'pl-PL': 'Gracz opuścił grę',
 };
 
-export const playerJoinedSnack: TranslationToken = {
+export const playerJoinedBoard: TranslationToken = {
   'en-US': 'New player joined the game',
   'pl-PL': 'Nowy gracz dołączył do gry',
 };

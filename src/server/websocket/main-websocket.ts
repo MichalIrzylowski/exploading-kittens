@@ -7,9 +7,10 @@ import { sendBoards } from '@server/utils/send-boards';
 import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
 
 import { payloadTypes } from '@shared/payload-types';
-import { createMessage } from '@shared/helpers/create-message';
+import { createMessage, createSnackMessage } from '@shared/helpers/create-message';
 
 import { boards, players } from './ws-data';
+import { snackMessages } from '@shared/snack-messages';
 
 const fakeNames = ['Marian', 'Zenek', 'Miłosz', 'Tobiasz', 'Borys', 'Angelini', 'Michałek'];
 
@@ -53,15 +54,8 @@ export const mainConnection = (socket: WebSocket) => {
         player.isPlaying = boardId;
         boards.set(boardId, new Board(boardId, player));
 
-        const snackData = payloadTypes.boardCreatedSnackSuccess.split('-');
-
         socket.send(createMessage(payloadTypes.boardCreated, boardId));
-        socket.send(
-          createMessage(payloadTypes.boardCreatedSnackSuccess, {
-            message: snackData[0],
-            severity: snackData[1],
-          })
-        );
+        socket.send(createSnackMessage({ message: snackMessages.boardCreated, severity: 'success' }));
 
         broadCastToAllUsers(players, {
           type: payloadTypes.createBoard,

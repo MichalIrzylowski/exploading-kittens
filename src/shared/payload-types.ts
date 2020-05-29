@@ -9,6 +9,8 @@ export enum payloadTypes {
   errorGameHasAlreadyStarted = 'error-game-has-already-started',
   errorTooManyPlayers = 'too-many-players',
 
+  game = 'game',
+  snack = 'snack',
   gameNotAbleToStart = 'notAbleToStart',
   gameReadyToStart = 'readyToStart',
   gameStarted = 'started',

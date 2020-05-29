@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 import { SnackBar } from '@front/components/snack-bar';
 
+import { TSnackSeverity } from '@shared/snack-messages';
+
 export interface SnackbarMessage {
   message: string;
   key: number;
-  severity: 'success' | 'info' | 'warning' | 'error';
+  severity: TSnackSeverity;
 }
 
 interface ISnackBarGroup {
@@ -15,9 +17,7 @@ interface ISnackBarGroup {
 
 export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
   const [open, setOpen] = useState(false);
-  const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(
-    undefined
-  );
+  const [messageInfo, setMessageInfo] = useState<SnackbarMessage | undefined>(undefined);
 
   useEffect(() => {
     if (props.snackPack.length && !messageInfo) {
@@ -31,10 +31,7 @@ export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
     }
   }, [props.snackPack, messageInfo, open]);
 
-  const handleClose = (
-    event?: React.SyntheticEvent | MouseEvent,
-    reason?: string
-  ) => {
+  const handleClose = (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -46,12 +43,7 @@ export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
   };
 
   return (
-    <SnackBar
-      open={open}
-      setClose={handleClose}
-      onExited={handleExited}
-      severity={messageInfo?.severity}
-    >
+    <SnackBar open={open} setClose={handleClose} onExited={handleExited} severity={messageInfo?.severity}>
       {messageInfo?.message}
     </SnackBar>
   );

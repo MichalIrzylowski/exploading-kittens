@@ -15,6 +15,29 @@ export const Board = () => {
   const [isBoard, setBoard] = useState(history.location.state ? history.location.state : '');
   const ws = useWebSocket();
 
+  const handleLeaveGame = () => {
+    const boardId = sessionStorage.getItem(sessionStorageItems.currentGame);
+
+    if (boardId) {
+      const player = sessionStorage.getItem(sessionStorageItems.user) as string;
+      const playerId = JSON.parse(player).id;
+      ws.send(payloadTypes.leaveGame, { playerId, boardId });
+
+      sessionStorage.removeItem(sessionStorageItems.currentGame);
+    }
+  };
+
+  useEffect(() => {
+    history.listen((location, action) => {
+      if (action === 'POP') handleLeaveGame();
+    });
+    return () => {
+      history.listen((location, action) => {
+        if (action === 'POP') handleLeaveGame();
+      });
+    };
+  }, []);
+
   useEffect(() => {
     if (history.location.state) {
       const playerId = sessionStorage.getItem(sessionStorageItems.user) as string;
@@ -24,29 +47,15 @@ export const Board = () => {
       });
     }
 
-    const handleLeaveGame = () => {
-      const boardId = sessionStorage.getItem(sessionStorageItems.currentGame);
-
-      if (boardId) {
-        const player = sessionStorage.getItem(sessionStorageItems.user) as string;
-        const playerId = JSON.parse(player).id;
-        ws.send(payloadTypes.leaveGame, { playerId, boardId });
-
-        sessionStorage.removeItem(sessionStorageItems.currentGame);
-      }
-    };
-    window.addEventListener('beforeunload', handleLeaveGame);
-
     return () => {
       handleLeaveGame();
-      window.removeEventListener('beforeunload', handleLeaveGame);
     };
   }, [history.location.pathname]);
 
   return (
     <main>
       <LayoutWrapper>
-        {!isBoard && <BoardCreator setNewBoard={setBoard} />}
+        {!isBoard && <BoardCreator setNewBoard={setBoard} />} {/* make separate route for this */}
         {isBoard && <PlayerView />}
       </LayoutWrapper>
     </main>

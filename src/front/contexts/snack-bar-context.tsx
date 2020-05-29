@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext, Dispatch, SetStateAction } 
 
 import { SnackBarGroup, SnackbarMessage } from '@front/components/snack-bar-group';
 
+export { SnackbarMessage };
+
 type TSnackBarContext = Dispatch<SetStateAction<SnackbarMessage[]>>;
 
 const SnackBarContext = createContext<TSnackBarContext | null>(null);

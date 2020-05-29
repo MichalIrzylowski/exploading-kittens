@@ -7,6 +7,9 @@ import { socketStates } from '@shared/socket-states';
 import { gameStages } from '@shared/game-stages';
 
 import { broadCastToAllUsers } from '@server/utils/broad-cast-to-all-users';
+import { actionTypes } from '@shared/action-types';
+import { ISnackMessage, IGameMessagePayload } from '@shared/interfaces';
+import { snackMessages } from '@shared/snack-messages';
 
 interface IBoard {
   id: string;
@@ -37,6 +40,8 @@ export class Board implements IBoard {
       return;
     }
 
+    player.isPlaying = this.id;
+
     this.players.push(player);
 
     broadCastToAllUsers(players, {
@@ -48,27 +53,31 @@ export class Board implements IBoard {
       isOnline: player.socket.readyState === socketStates.open,
       ...player.getIdentification(),
     }));
-    this.broadCastSnacks(payloadTypes.playerJoinedSnackSuccess, {
-      currentPlayers,
+
+    this.broadCastGameMessage({
+      action: actionTypes.playerJoinedBoard,
+      snack: { message: snackMessages.playerJoinedBoard, severity: 'success' },
+      payload: { currentPlayers },
     });
 
     const isReadyToStart = this.players.length > 1;
 
-    player.snackMessage(payloadTypes.joinedBoardSnackSuccess, {
-      boardId: this.id,
-      isReadyToStart,
-      currentPlayers,
-    });
-
     if (this.gameStage === gameStages.notAbleToStart && isReadyToStart) {
       this.gameStage = gameStages.readyToStart;
-      this.broadCastGameMessage(payloadTypes.gameReadyToStart, gameStages.readyToStart);
-      return;
+
+      this.broadCastGameMessage({
+        action: actionTypes.setGameStage,
+        snack: { message: snackMessages.gameReadyToStart, severity: 'success' },
+        payload: { gameStage: this.gameStage },
+      });
     }
   }
 
   removePlayer(id: string) {
-    if (!(this.players.length - 1)) {
+    const isGameStarted = this.gameStage === gameStages.started;
+    this.players = this.players.filter((player) => player.getIdentification().id !== id);
+
+    if (!this.players.length) {
       broadCastToAllUsers(players, {
         type: payloadTypes.boardDeleted,
         payload: this.id,
@@ -77,23 +86,24 @@ export class Board implements IBoard {
       return boards.delete(this.id);
     }
 
-    const isGameStarted = this.gameStage === gameStages.started;
-
-    this.players = this.players.filter((player) => player.getIdentification().id !== id);
-
     broadCastToAllUsers(players, {
       type: payloadTypes.playerLeftBoard,
       payload: this.id,
     });
 
-    this.broadCastSnacks(payloadTypes.playerLeftBoardSnackInfo, {
-      id,
-      isStarted: isGameStarted,
+    this.broadCastGameMessage({
+      action: actionTypes.playerLeftBoard,
+      snack: { message: snackMessages.playerLeftBoard, severity: 'info' },
+      payload: { playerId: id },
     });
 
     if (this.players.length < 2 && !isGameStarted) {
       this.gameStage = gameStages.notAbleToStart;
-      this.broadCastGameMessage(payloadTypes.gameNotAbleToStart, payloadTypes.gameNotAbleToStart);
+      this.broadCastGameMessage({
+        action: actionTypes.setGameStage,
+        snack: { message: snackMessages.gameNotReadyToStart, severity: 'warning' },
+        payload: { gameStage: this.gameStage },
+      });
     }
   }
 
@@ -101,24 +111,38 @@ export class Board implements IBoard {
     if (this.gameStage === gameStages.readyToStart) {
       this.gameStage = gameStages.started;
 
-      this.broadCastSnacks(payloadTypes.gameStartedSnackSuccess);
+      this.broadCastGameMessage({
+        action: actionTypes.setGameStage,
+        snack: { message: snackMessages.gameStarted, severity: 'success' },
+        payload: { gameMessage: this.gameStage },
+      });
+    } else {
+      this.broadCastSnacks({ message: snackMessages.gameNotReadyToStart, severity: 'error' });
+      return;
     }
 
     this.deck.shuffle();
 
     this.players.forEach((player) => {
       const initialhand = this.deck.prepareInitialHand();
-      const deckCards = this.deck.cards.length;
+      const deckCardsAmount = this.deck.cards.length;
 
       player.hand = initialhand;
-      player.gameMessage(payloadTypes.initialHand, { initialhand, deckCards });
+      player.gameMessage({ action: actionTypes.initialHand, payload: { initialhand, deckCardsAmount } });
 
       const restPlayers = this.players.filter(
         (otherPlayer) => otherPlayer.getIdentification().id !== player.getIdentification().id
       );
+
       this.broadCastGameMessage(
-        payloadTypes.otherPlayerRecivedCard,
-        { cardsLength: initialhand.length, player: player.getIdentification().id, deckCards },
+        {
+          action: actionTypes.otherPlayerRecievedCards,
+          payload: {
+            recievedCardsAmount: initialhand.length,
+            playerId: player.getIdentification().id,
+            deckCardsAmount,
+          },
+        },
         restPlayers
       );
     });
@@ -126,15 +150,15 @@ export class Board implements IBoard {
     this.deck.shuffle();
   }
 
-  broadCastGameMessage(type: payloadTypes, payload?: any, players = this.players) {
+  broadCastGameMessage(payload: IGameMessagePayload, players = this.players) {
     players.forEach((player) => {
-      player.gameMessage(type, payload);
+      player.gameMessage(payload);
     });
   }
 
-  broadCastSnacks(type: payloadTypes, payload?: any, players = this.players) {
+  broadCastSnacks(payload: ISnackMessage, players = this.players) {
     players.forEach((player) => {
-      player.snackMessage(type, payload);
+      player.snackMessage(payload);
     });
   }
 

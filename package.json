@@ -10,6 +10,7 @@
     "watch": "npx webpack --watch"
   },
   "_moduleAliases": {
+    "@front": "./src/front",
     "@server": "./src/server/",
     "@shared": "./src/shared/"
   },
@@ -44,6 +45,7 @@
     "ts-loader": "^7.0.4",
     "ts-node": "^8.10.1",
     "typescript": "^3.8.3",
+    "use-reducer-logger": "^1.0.2",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "^3.7.2",
