@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 import { Button, buttonAppearance } from '@front/components/button';
+import { PlayersList, IPlayer } from './players-list';
+import { PlayerPanel, ICard } from './player-panel';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
 import { useSnackBar } from '@front/contexts/snack-bar-context';
@@ -12,7 +14,6 @@ import { sessionStorageItems } from '@front/shared/types';
 import { gameStages } from '@shared/game-stages';
 import { payloadTypes } from '@shared/payload-types';
 
-import { GameArea, IPlayer, ICard } from './game-area';
 import { snackMessageCreator } from './helpers/message-creator';
 import * as localizations from './resources/localizations';
 import css from './player-view.scss';
@@ -105,7 +106,8 @@ export const PlayerView: React.FC = () => {
           </Button>
         )}
       </div>
-      <GameArea players={players} cards={cards} />
+      <PlayersList players={players} />
+      <PlayerPanel cards={cards} />
     </>
   );
 };

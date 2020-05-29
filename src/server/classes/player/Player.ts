@@ -6,11 +6,13 @@ import { createMessage } from '@shared/helpers/create-message';
 import { payloadTypes } from '@shared/payload-types';
 
 import { IPlayerID, PlayerIdentification } from './PlayerIdentification';
+import { Card } from '../card';
 
 interface IPlayer {
   data: PlayerIdentification;
   socket: WebSocket;
   isPlaying: string;
+  hand?: Card[];
 }
 
 export class Player implements IPlayer {
@@ -53,4 +55,5 @@ export class Player implements IPlayer {
   data: PlayerIdentification;
   isPlaying: string;
   socket: WebSocket;
+  hand?: Card[];
 }

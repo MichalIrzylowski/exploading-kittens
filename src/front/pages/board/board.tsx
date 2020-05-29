@@ -12,7 +12,6 @@ import { PlayerView } from './player-view';
 
 export const Board = () => {
   const history = useHistory();
-  history.location.state;
   const [isBoard, setBoard] = useState(history.location.state ? history.location.state : '');
   const ws = useWebSocket();
 

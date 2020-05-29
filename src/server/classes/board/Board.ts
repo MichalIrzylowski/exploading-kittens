@@ -13,6 +13,7 @@ interface IBoard {
   players: Player[];
   deck: Deck;
   gameStage: gameStages;
+  currentPlayer?: number;
 }
 
 const maxPlayers = 5;
@@ -109,6 +110,7 @@ export class Board implements IBoard {
       const initialhand = this.deck.prepareInitialHand();
       const deckCards = this.deck.cards.length;
 
+      player.hand = initialhand;
       player.gameMessage(payloadTypes.initialHand, { initialhand, deckCards });
 
       const restPlayers = this.players.filter(
