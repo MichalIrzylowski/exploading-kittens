@@ -1,4 +1,5 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import logger from 'use-reducer-logger';
 
 import { Button, buttonAppearance } from '@front/components/button';
@@ -21,16 +22,17 @@ import { PlayerPanel } from './player-panel';
 import * as localizations from './resources/localizations';
 import css from './board.scss';
 
-export const PlayerView: React.FC = () => {
+export const Board: React.FC = () => {
   const translations = translate(localizations);
   const [state, dispatch] = useReducer(logger(gameReducer), initialState);
+  const { id } = useParams();
   const ws = useWebSocket();
   const sendSnackBar = useSnackBar();
 
   const handleGameStateUpdate = (gameMessagePayload: IGameMessagePayload) => {
-    const { action, payload } = gameMessagePayload;
-    if (gameMessagePayload.snack) {
-      const { message, severity } = gameMessagePayload.snack;
+    const { action, payload, snack } = gameMessagePayload;
+    if (snack) {
+      const { message, severity } = snack;
       const snackBarMessage: SnackbarMessage = {
         message: snackMessages[message],
         key: Date.now(),
@@ -44,14 +46,26 @@ export const PlayerView: React.FC = () => {
   };
 
   useEffect(() => {
+    const currentGame = sessionStorage.getItem(sessionStorageItems.currentGame);
+    if (!currentGame) {
+      const userId = JSON.parse(sessionStorage.getItem(sessionStorageItems.user) as string).id;
+      const payload = { boardId: id, userId };
+      ws.send(payloadTypes.joinGame, payload);
+      sessionStorage.setItem(sessionStorageItems.currentGame, id);
+    }
+
     ws.on(payloadTypes.game, handleGameStateUpdate);
     return () => {
       ws.off(payloadTypes.game, handleGameStateUpdate);
     };
   }, []);
 
-  const handleClick = () => ws.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame));
+  const handleClick = useCallback(
+    () => ws.send(payloadTypes.startGame, sessionStorage.getItem(sessionStorageItems.currentGame)),
+    []
+  );
 
+  console.log(state.gameStage);
   return (
     <>
       <div className={css.header}>

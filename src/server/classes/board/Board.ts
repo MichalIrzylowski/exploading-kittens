@@ -114,7 +114,7 @@ export class Board implements IBoard {
       this.broadCastGameMessage({
         action: actionTypes.setGameStage,
         snack: { message: snackMessages.gameStarted, severity: 'success' },
-        payload: { gameMessage: this.gameStage },
+        payload: { gameStage: this.gameStage },
       });
     } else {
       this.broadCastSnacks({ message: snackMessages.gameNotReadyToStart, severity: 'error' });

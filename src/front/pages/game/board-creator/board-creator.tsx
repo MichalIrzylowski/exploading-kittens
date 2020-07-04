@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 
@@ -7,13 +8,11 @@ import { sessionStorageItems } from '@front/shared/types';
 
 import { customEvents } from '@shared/events';
 import { payloadTypes } from '@shared/payload-types';
+import { game } from '@shared/urls';
 
-interface IBoardCreator {
-  setNewBoard: (id: string) => void;
-}
-
-export const BoardCreator: React.FC<IBoardCreator> = ({ setNewBoard }) => {
+export const BoardCreator: React.FC = () => {
   const ws = useWebSocket();
+  const history = useHistory();
 
   const handleClick = () => {
     const player = sessionStorage.getItem(sessionStorageItems.user);
@@ -25,8 +24,8 @@ export const BoardCreator: React.FC<IBoardCreator> = ({ setNewBoard }) => {
   };
 
   const handleBoardCreation = (id: string) => {
-    setNewBoard(id);
     sessionStorage.setItem(sessionStorageItems.currentGame, id);
+    history.push(`${game}/${id}`);
   };
 
   useEffect(() => {

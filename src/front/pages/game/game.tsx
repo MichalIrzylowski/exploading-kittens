@@ -6,18 +6,17 @@ import { sessionStorageItems } from '@front/shared/types';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
 
 import { payloadTypes } from '@shared/payload-types';
-import { _new } from '@shared/urls';
+import { _new, id, homePage } from '@shared/urls';
 
 import { BoardCreator } from './board-creator';
-import { PlayerView } from './board';
+import { Board } from './board';
 
 export const Game = () => {
   const history = useHistory();
   const match = useRouteMatch();
-  const [isBoard, setBoard] = useState(history.location.state ? history.location.state : '');
   const ws = useWebSocket();
 
-  const handleLeaveGame = useCallback(() => {
+  const handleLeaveGame = () => {
     const boardId = sessionStorage.getItem(sessionStorageItems.currentGame);
 
     if (boardId) {
@@ -27,15 +26,15 @@ export const Game = () => {
 
       sessionStorage.removeItem(sessionStorageItems.currentGame);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    history.listen((location, action) => {
-      if (action === 'POP') handleLeaveGame();
+    history.listen(({ pathname }) => {
+      if (pathname === homePage) handleLeaveGame();
     });
     return () => {
-      history.listen((location, action) => {
-        if (action === 'POP') handleLeaveGame();
+      history.listen(({ pathname }) => {
+        if (pathname === homePage) handleLeaveGame();
       });
     };
   }, []);
@@ -48,23 +47,19 @@ export const Game = () => {
         userId: JSON.parse(playerId).id,
       });
     }
-
-    return () => {
-      handleLeaveGame();
-    };
   }, [history.location.pathname]);
-
-  console.log('duppa', match);
 
   return (
     <main>
       <LayoutWrapper>
         <Switch>
           <Route path={match.path + _new}>
-            <BoardCreator setNewBoard={setBoard} />
+            <BoardCreator />
+          </Route>
+          <Route path={match.path + id}>
+            <Board />
           </Route>
         </Switch>
-        {isBoard && <PlayerView />}
       </LayoutWrapper>
     </main>
   );

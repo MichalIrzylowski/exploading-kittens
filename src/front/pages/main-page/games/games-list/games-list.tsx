@@ -30,7 +30,7 @@ export const GamesList: React.FC<IGamesList> = ({ games }) => (
         <span>
           {players} / {maxPlayers}
         </span>
-        <GameLink active={players !== maxPlayers} to={{ pathname: game, state: id }}>
+        <GameLink active={players !== maxPlayers} to={`${game}/${id}`}>
           Dołącz
         </GameLink>
       </ListItem>

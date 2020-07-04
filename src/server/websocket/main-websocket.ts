@@ -19,6 +19,7 @@ export const mainConnection = (socket: WebSocket) => {
 
   socket.on('message', (data) => {
     const message = JSON.parse(data as any);
+    console.log('main-WebSocket.ts', message);
 
     switch (message.type) {
       case payloadTypes.registerUser:

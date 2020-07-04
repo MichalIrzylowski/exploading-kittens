@@ -23,7 +23,6 @@ export class Player implements IPlayer {
     this.boardId = '';
 
     this.socket.addEventListener('close', () => {
-      console.warn('Player.ts closing', this.boardId.length);
       if (this.boardId) {
         boards.get(this.boardId)?.removePlayer(this.getIdentification().id);
       }
