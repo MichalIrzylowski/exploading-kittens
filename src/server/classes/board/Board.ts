@@ -40,7 +40,7 @@ export class Board implements IBoard {
       return;
     }
 
-    player.isPlaying = this.id;
+    player.boardId = this.id;
 
     this.players.push(player);
 

@@ -51,7 +51,7 @@ export const mainConnection = (socket: WebSocket) => {
           break;
         }
 
-        player.isPlaying = boardId;
+        player.boardId = boardId;
         boards.set(boardId, new Board(boardId, player));
 
         socket.send(createMessage(payloadTypes.boardCreated, boardId));

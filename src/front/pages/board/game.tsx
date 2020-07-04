@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch, Route, Switch } from 'react-router-dom';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
 import { sessionStorageItems } from '@front/shared/types';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
 
 import { payloadTypes } from '@shared/payload-types';
+import { _new } from '@shared/urls';
 
 import { BoardCreator } from './board-creator';
 import { PlayerView } from './player-view';
 
-export const Board = () => {
+export const Game = () => {
   const history = useHistory();
+  const match = useRouteMatch();
   const [isBoard, setBoard] = useState(history.location.state ? history.location.state : '');
   const ws = useWebSocket();
 
@@ -52,10 +54,17 @@ export const Board = () => {
     };
   }, [history.location.pathname]);
 
+  console.log('duppa', match);
+
   return (
     <main>
       <LayoutWrapper>
-        {!isBoard && <BoardCreator setNewBoard={setBoard} />} {/* make separate route for this */}
+        <Switch>
+          <Route path={match.path + _new}>
+            <BoardCreator setNewBoard={setBoard} />
+          </Route>
+        </Switch>
+        {/* {!isBoard && } make separate route for this */}
         {isBoard && <PlayerView />}
       </LayoutWrapper>
     </main>

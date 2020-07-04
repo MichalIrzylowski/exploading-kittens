@@ -5,7 +5,7 @@ import { List } from '@front/components/list';
 import { ListItem } from '@front/components/list-item';
 
 import { TBoard } from '@shared/types';
-import { board } from '@shared/urls';
+import { game } from '@shared/urls';
 
 import css from './games-list.scss';
 
@@ -30,7 +30,7 @@ export const GamesList: React.FC<IGamesList> = ({ games }) => (
         <span>
           {players} / {maxPlayers}
         </span>
-        <GameLink active={players !== maxPlayers} to={{ pathname: board, state: id }}>
+        <GameLink active={players !== maxPlayers} to={{ pathname: game, state: id }}>
           Dołącz
         </GameLink>
       </ListItem>

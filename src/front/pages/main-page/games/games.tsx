@@ -10,7 +10,6 @@ import { TBoard } from '@shared/types';
 import { GamesList } from './games-list/';
 import * as localizations from './resources/localizations';
 import css from './games.scss';
-import { board } from '@shared/urls';
 
 export const Games = () => {
   const ws = useWebSocket();

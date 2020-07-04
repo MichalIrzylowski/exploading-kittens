@@ -12,7 +12,7 @@ import { Card } from '../card';
 interface IPlayer {
   data: PlayerIdentification;
   socket: WebSocket;
-  isPlaying: string;
+  boardId: string;
   hand?: Card[];
 }
 
@@ -20,12 +20,12 @@ export class Player implements IPlayer {
   constructor(playerId: IPlayerID, socket: WebSocket) {
     this.data = new PlayerIdentification(playerId);
     this.socket = socket;
-    this.isPlaying = '';
+    this.boardId = '';
 
     this.socket.addEventListener('close', () => {
-      console.warn('Player.ts closing', this.isPlaying.length);
-      if (this.isPlaying) {
-        boards.get(this.isPlaying)?.removePlayer(this.getIdentification().id);
+      console.warn('Player.ts closing', this.boardId.length);
+      if (this.boardId) {
+        boards.get(this.boardId)?.removePlayer(this.getIdentification().id);
       }
 
       players.delete(this.data.id);
@@ -49,7 +49,7 @@ export class Player implements IPlayer {
   }
 
   data: PlayerIdentification;
-  isPlaying: string;
+  boardId: string;
   socket: WebSocket;
   hand?: Card[];
 }

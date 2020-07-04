@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 
 import { SnackBarProvider } from '@front/contexts/snack-bar-context';
 import { WebSocketProvider } from '@front/contexts/main-websocket';
@@ -10,9 +10,9 @@ import { TopBar } from '@front/components/top-bar';
 
 import { MainPage } from '@front/pages/main-page';
 import { Guide } from '@front/pages/guide';
-import { Board } from '@front/pages/board';
+import { Game } from '@front/pages/board';
 
-import { homePage, guide, board } from '@shared/urls';
+import { homePage, guide, game } from '@shared/urls';
 
 import './main.scss';
 
@@ -25,11 +25,9 @@ export const App: React.FC = () => {
             <title>Exploding kittens</title>
           </Head>
           <TopBar />
-          <Switch>
-            <Route exact path={homePage} component={MainPage} />
-            <Route exact path={guide} component={Guide} />
-            <Route exact path={board} component={Board} />
-          </Switch>
+          <Route exact path={homePage} component={MainPage} />
+          <Route path={guide} component={Guide} />
+          <Route path={game} component={Game} />
         </WebSocketProvider>
       </SnackBarProvider>
     </BrowserRouter>
