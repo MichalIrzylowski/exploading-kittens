@@ -1,8 +1,8 @@
 import { actionTypes } from '@shared/action-types';
 import { gameStages } from '@shared/game-stages';
 
-import { IPlayer } from '@front/pages/board/player-view/players-list';
-import { ICard } from '@front/pages/board/player-view/player-panel';
+import { IPlayer } from '@front/pages/game/board/players-list';
+import { ICard } from '@front/pages/game/board/player-panel';
 
 interface IGameState {
   gameStage: gameStages;

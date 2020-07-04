@@ -10,7 +10,7 @@ import { TopBar } from '@front/components/top-bar';
 
 import { MainPage } from '@front/pages/main-page';
 import { Guide } from '@front/pages/guide';
-import { Game } from '@front/pages/board';
+import { Game } from '@front/pages/game';
 
 import { homePage, guide, game } from '@shared/urls';
 

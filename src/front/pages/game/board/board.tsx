@@ -19,7 +19,7 @@ import { snackMessages } from '@shared/snack-messages';
 import { PlayersList } from './players-list';
 import { PlayerPanel } from './player-panel';
 import * as localizations from './resources/localizations';
-import css from './player-view.scss';
+import css from './board.scss';
 
 export const PlayerView: React.FC = () => {
   const translations = translate(localizations);

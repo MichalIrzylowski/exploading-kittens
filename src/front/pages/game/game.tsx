@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory, useRouteMatch, Route, Switch } from 'react-router-dom';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
@@ -9,7 +9,7 @@ import { payloadTypes } from '@shared/payload-types';
 import { _new } from '@shared/urls';
 
 import { BoardCreator } from './board-creator';
-import { PlayerView } from './player-view';
+import { PlayerView } from './board';
 
 export const Game = () => {
   const history = useHistory();
@@ -17,7 +17,7 @@ export const Game = () => {
   const [isBoard, setBoard] = useState(history.location.state ? history.location.state : '');
   const ws = useWebSocket();
 
-  const handleLeaveGame = () => {
+  const handleLeaveGame = useCallback(() => {
     const boardId = sessionStorage.getItem(sessionStorageItems.currentGame);
 
     if (boardId) {
@@ -27,7 +27,7 @@ export const Game = () => {
 
       sessionStorage.removeItem(sessionStorageItems.currentGame);
     }
-  };
+  }, []);
 
   useEffect(() => {
     history.listen((location, action) => {
@@ -64,7 +64,6 @@ export const Game = () => {
             <BoardCreator setNewBoard={setBoard} />
           </Route>
         </Switch>
-        {/* {!isBoard && } make separate route for this */}
         {isBoard && <PlayerView />}
       </LayoutWrapper>
     </main>
