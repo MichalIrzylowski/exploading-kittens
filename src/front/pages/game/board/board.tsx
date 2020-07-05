@@ -65,7 +65,6 @@ export const Board: React.FC = () => {
     []
   );
 
-  console.log(state.gameStage);
   return (
     <>
       <div className={css.header}>

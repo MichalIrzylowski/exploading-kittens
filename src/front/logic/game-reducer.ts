@@ -34,10 +34,10 @@ export const gameReducer = (state: TPartialGameState, action: any) => {
 
       if (state.gameStage === gameStages.started) {
         players = state.players?.map((player) => {
-          if (player.id === playerId) player.isOnline === false;
+          if (player.id === playerId) player.isOnline = false;
           return player;
         });
-      } else players = state.players?.filter((player) => player.id === playerId);
+      } else players = state.players?.filter((player) => player.id !== playerId);
 
       return { ...state, players };
 

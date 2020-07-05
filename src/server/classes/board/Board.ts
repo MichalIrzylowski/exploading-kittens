@@ -11,6 +11,8 @@ import { actionTypes } from '@shared/action-types';
 import { ISnackMessage, IGameMessagePayload } from '@shared/interfaces';
 import { snackMessages } from '@shared/snack-messages';
 
+import { gameReadyToStartMessage } from './consts';
+
 interface IBoard {
   id: string;
   players: Player[];
@@ -65,11 +67,9 @@ export class Board implements IBoard {
     if (this.gameStage === gameStages.notAbleToStart && isReadyToStart) {
       this.gameStage = gameStages.readyToStart;
 
-      this.broadCastGameMessage({
-        action: actionTypes.setGameStage,
-        snack: { message: snackMessages.gameReadyToStart, severity: 'success' },
-        payload: { gameStage: this.gameStage },
-      });
+      this.broadCastGameMessage(gameReadyToStartMessage);
+    } else if (isReadyToStart) {
+      player.gameMessage(gameReadyToStartMessage);
     }
   }
 
