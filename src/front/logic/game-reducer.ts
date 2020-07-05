@@ -42,11 +42,14 @@ export const gameReducer = (state: TPartialGameState, action: any) => {
       return { ...state, players };
 
     case actionTypes.initialHand:
-      return { ...state, ...action.payload };
+      return { ...state, cards: action.payload.initialhand };
 
     case actionTypes.otherPlayerRecievedCards:
       const newHandedPlayers = state.players?.map((player) => {
-        if (player.id === action.payload.playerId) player.handLength += action.payload.recievedCardsAmount;
+        if (player.id === action.payload.playerId) {
+          if (!player.handLength) player.handLength = 0;
+          player.handLength += action.payload.recievedCardsAmount;
+        }
 
         return player;
       });
