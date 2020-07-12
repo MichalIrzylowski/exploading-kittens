@@ -22,7 +22,7 @@ export const mainConnection = (socket: WebSocket) => {
     console.log('main-WebSocket.ts', message);
 
     switch (message.type) {
-      case payloadTypes.registerUser:
+      case payloadTypes.registerUser: {
         let newId = uuid();
         let randomNumber = Math.floor(Math.random() * fakeNames.length);
         let name = fakeNames[randomNumber];
@@ -37,12 +37,14 @@ export const mainConnection = (socket: WebSocket) => {
 
         socket.send(createMessage(payloadTypes.registerUser, playerId));
         break;
+      }
 
-      case payloadTypes.refreshBoards:
+      case payloadTypes.refreshBoards: {
         sendBoards(socket, boards);
         break;
+      }
 
-      case payloadTypes.createBoard:
+      case payloadTypes.createBoard: {
         const boardId = uuid();
         const { id } = message.payload;
 
@@ -67,19 +69,29 @@ export const mainConnection = (socket: WebSocket) => {
           },
         });
         break;
+      }
 
-      case payloadTypes.leaveGame:
+      case payloadTypes.leaveGame: {
         boards.get(message.payload.boardId)?.removePlayer(message.payload.playerId);
         break;
+      }
 
-      case payloadTypes.joinGame:
+      case payloadTypes.joinGame: {
         const joiningPlayer = players.get(message.payload.userId) as Player;
         boards.get(message.payload.boardId)?.addPlayer(joiningPlayer);
         break;
+      }
 
-      case payloadTypes.startGame:
+      case payloadTypes.startGame: {
         boards.get(message.payload)?.startGame();
         break;
+      }
+
+      case payloadTypes.playCard: {
+        const { boardId, playerId, ...card } = message.payload;
+        boards.get(boardId)?.playCard(card, playerId);
+        break;
+      }
 
       default:
         throw new Error(`Unhandled message (main websocket): ${message.type}`);

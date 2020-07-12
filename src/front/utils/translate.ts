@@ -8,10 +8,15 @@ type TranslationTokens = {
   [key: string]: TranslationToken;
 };
 
-export const translate = (translationTokens: TranslationTokens) => {
+type Translations<T> = {
+  [key in keyof T]: string;
+};
+
+export const translate = (translationTokens: TranslationTokens): Translations<TranslationTokens> => {
   const translations: IObject<string> = {};
 
-  const { language } = navigator;
+  let { language } = navigator;
+  if (language !== 'pl-PL') language = 'en-US';
 
   Object.keys(translationTokens).forEach((token) => {
     translations[token] = translationTokens[token][language as TTranslations];

@@ -29,4 +29,7 @@ export enum payloadTypes {
 
   refreshBoards = 'refresh-boards',
   registerUser = 'register-user',
+
+  playCard = 'play-card',
+  seeTheFuture = 'see-the-future',
 }

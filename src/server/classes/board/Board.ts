@@ -1,5 +1,6 @@
 import { Player } from '@server/classes/player';
 import { Deck } from '@server/classes/deck';
+import { Card, cardTypes } from '@server/classes/card';
 import { players, boards } from '@server/websocket';
 
 import { payloadTypes } from '@shared/payload-types';
@@ -147,7 +148,34 @@ export class Board implements IBoard {
       );
     });
 
+    this.currentPlayer = 0;
+    this.broadCastGameMessage({
+      action: actionTypes.setCurrentPlayer,
+      payload: this.currentPlayer,
+      snack: { message: snackMessages.currentPlayer, severity: 'info' },
+    });
+
     this.deck.shuffle();
+  }
+
+  playCard(card: Card, playerId: string) {
+    const { type } = card;
+    const player = this.players.find((player) => player.getIdentification().id === playerId);
+    const cards = this.deck.cards;
+
+    switch (type) {
+      case cardTypes.seeTheFuture: {
+        player?.send(payloadTypes.seeTheFuture, [
+          cards[cards.length - 1],
+          cards[cards.length - 2],
+          cards[cards.length - 3],
+        ]);
+        break;
+      }
+
+      default:
+        throw new Error(`Unknown card type: ${type}`);
+    }
   }
 
   broadCastGameMessage(payload: IGameMessagePayload, players = this.players) {
@@ -162,8 +190,9 @@ export class Board implements IBoard {
     });
   }
 
+  currentPlayer?: number;
+  deck: Deck;
   gameStage: gameStages;
   id: string;
   players: Player[];
-  deck: Deck;
 }

@@ -2,6 +2,8 @@ import React, { useEffect, useReducer, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import logger from 'use-reducer-logger';
 
+import { IPlayer } from '@front/pages/game/board/players-list';
+
 import { Button, buttonAppearance } from '@front/components/button';
 import { gameReducer, initialState } from '@front/logic/game-reducer';
 
@@ -28,6 +30,7 @@ export const Board: React.FC = () => {
   const { id } = useParams();
   const ws = useWebSocket();
   const sendSnackBar = useSnackBar();
+  const userId = JSON.parse(sessionStorage.getItem(sessionStorageItems.user) as string).id;
 
   const handleGameStateUpdate = (gameMessagePayload: IGameMessagePayload) => {
     const { action, payload, snack } = gameMessagePayload;
@@ -48,7 +51,6 @@ export const Board: React.FC = () => {
   useEffect(() => {
     const currentGame = sessionStorage.getItem(sessionStorageItems.currentGame);
     if (!currentGame) {
-      const userId = JSON.parse(sessionStorage.getItem(sessionStorageItems.user) as string).id;
       const payload = { boardId: id, userId };
       ws.send(payloadTypes.joinGame, payload);
       sessionStorage.setItem(sessionStorageItems.currentGame, id);
@@ -65,6 +67,9 @@ export const Board: React.FC = () => {
     []
   );
 
+  const currentPlayer = state.players ? state.players[state.currentPlayer as number] : null;
+  const isYourTurn = currentPlayer?.id === userId;
+
   return (
     <>
       <div className={css.header}>
@@ -73,6 +78,9 @@ export const Board: React.FC = () => {
           <Button onClick={handleClick} appearance={buttonAppearance.success}>
             {translations.startGame}
           </Button>
+        )}
+        {state.gameStage === gameStages.started && (
+          <h2>{isYourTurn ? translations.yourTurn : `${translations.currentPlayer} ${currentPlayer?.name}`}</h2>
         )}
       </div>
       <PlayersList players={state.players as any} />

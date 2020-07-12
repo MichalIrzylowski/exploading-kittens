@@ -43,3 +43,13 @@ export const startGame: TranslationToken = {
   'en-US': 'Start game!',
   'pl-PL': 'Rozpocznij grę!',
 };
+
+export const currentPlayer: TranslationToken = {
+  'en-US': 'Current player',
+  'pl-PL': 'Teraz zagrywa',
+};
+
+export const yourTurn: TranslationToken = {
+  'en-US': 'Your turn!',
+  'pl-PL': 'Twoja kolej',
+};

@@ -11,7 +11,7 @@ import { guide, newGame } from '@shared/urls';
 import * as localizations from './resources/localizations';
 import css from './menu.scss';
 
-export const Menu: React.FC = (props) => {
+export const Menu: React.FC = () => {
   const translations = translate(localizations);
 
   return (

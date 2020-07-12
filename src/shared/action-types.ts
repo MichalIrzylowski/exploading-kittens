@@ -4,4 +4,5 @@ export enum actionTypes {
   setGameStage = 'set-game-stage',
   playerLeftBoard = 'player-left-board',
   otherPlayerRecievedCards = 'other-player-recieved-cards',
+  setCurrentPlayer = 'set-current-player',
 }

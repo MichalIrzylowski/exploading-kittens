@@ -5,6 +5,7 @@ export enum snackMessages {
   playerJoinedBoard = 'playerJoinedBoard',
   playerLeftBoard = 'playerLeftBoard',
   boardCreated = 'boardCreated',
+  currentPlayer = 'currentPlayer',
 }
 
 export type TSnackSeverity = 'success' | 'info' | 'warning' | 'error';

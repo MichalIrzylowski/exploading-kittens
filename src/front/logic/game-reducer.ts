@@ -9,6 +9,7 @@ interface IGameState {
   players: IPlayer[];
   cards: ICard[];
   deckCardsAmount: number;
+  currentPlayer: number;
 }
 
 type TPartialGameState = Partial<IGameState>;
@@ -18,17 +19,20 @@ export const initialState: TPartialGameState = {
   players: [],
   cards: [],
   deckCardsAmount: 56,
+  currentPlayer: 0,
 };
 
 export const gameReducer = (state: TPartialGameState, action: any) => {
   switch (action.type) {
-    case actionTypes.playerJoinedBoard:
+    case actionTypes.playerJoinedBoard: {
       return { ...state, players: action.payload.currentPlayers };
+    }
 
-    case actionTypes.setGameStage:
+    case actionTypes.setGameStage: {
       return { ...state, gameStage: action.payload.gameStage };
+    }
 
-    case actionTypes.playerLeftBoard:
+    case actionTypes.playerLeftBoard: {
       const { playerId } = action.payload;
       let players;
 
@@ -40,11 +44,13 @@ export const gameReducer = (state: TPartialGameState, action: any) => {
       } else players = state.players?.filter((player) => player.id !== playerId);
 
       return { ...state, players };
+    }
 
-    case actionTypes.initialHand:
+    case actionTypes.initialHand: {
       return { ...state, cards: action.payload.initialhand };
+    }
 
-    case actionTypes.otherPlayerRecievedCards:
+    case actionTypes.otherPlayerRecievedCards: {
       const newHandedPlayers = state.players?.map((player) => {
         if (player.id === action.payload.playerId) {
           if (!player.handLength) player.handLength = 0;
@@ -55,6 +61,11 @@ export const gameReducer = (state: TPartialGameState, action: any) => {
       });
 
       return { ...state, players: newHandedPlayers, deckCardsAmount: action.payload.deckCardsAmount };
+    }
+
+    case actionTypes.setCurrentPlayer: {
+      return { ...state, currentPlayer: action.payload };
+    }
 
     default:
       return state;

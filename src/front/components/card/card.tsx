@@ -9,13 +9,12 @@ export interface ICard {
   color: cardColors;
   name: cardNames;
   type: string;
+  onPlayCard: () => void;
 }
 
-export const Card: React.FC<ICard> = ({ color, name, type }) => {
-  return (
-    <div className={classNames(css.card, css[color])}>
-      <h5>{name}</h5>
-      <h6>{type}</h6>
-    </div>
-  );
-};
+export const Card: React.FC<ICard> = ({ color, name, type, onPlayCard }) => (
+  <button className={classNames(css.card, css[color])} onClick={onPlayCard}>
+    <h5>{name}</h5>
+    <h6>{type}</h6>
+  </button>
+);
