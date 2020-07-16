@@ -1,6 +1,7 @@
-import { Player } from '@server/classes/player';
+import { Player, Hand } from '@server/classes/player';
 import { Deck } from '@server/classes/deck';
 import { Card, cardTypes } from '@server/classes/card';
+
 import { players, boards } from '@server/websocket';
 
 import { payloadTypes } from '@shared/payload-types';
@@ -128,7 +129,7 @@ export class Board implements IBoard {
       const initialhand = this.deck.prepareInitialHand();
       const deckCardsAmount = this.deck.cards.length;
 
-      player.hand = initialhand;
+      player.hand = new Hand(initialhand);
       player.gameMessage({ action: actionTypes.initialHand, payload: { initialhand, deckCardsAmount } });
 
       const restPlayers = this.players.filter(
@@ -162,6 +163,7 @@ export class Board implements IBoard {
     const { type } = card;
     const player = this.players.find((player) => player.getIdentification().id === playerId);
     const cards = this.deck.cards;
+    player?.hand;
 
     switch (type) {
       case cardTypes.seeTheFuture: {

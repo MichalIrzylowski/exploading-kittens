@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
 import { translate } from '@front/utils/translate';
@@ -53,7 +53,7 @@ export const Games = () => {
     };
   }, []);
 
-  const handleClick = () => ws.send(payloadTypes.refreshBoards);
+  const handleClick = () => useCallback(() => ws.send(payloadTypes.refreshBoards), [ws]);
 
   return (
     <div className={css.wrapper}>

@@ -7,13 +7,13 @@ import { payloadTypes } from '@shared/payload-types';
 import { IGameMessagePayload, ISnackMessage } from '@shared/interfaces';
 
 import { IPlayerID, PlayerIdentification } from './PlayerIdentification';
-import { Card } from '../card';
+import { Hand } from './Hand';
 
 interface IPlayer {
   data: PlayerIdentification;
   socket: WebSocket;
   boardId: string;
-  hand?: Card[];
+  hand?: Hand;
 }
 
 export class Player implements IPlayer {
@@ -50,5 +50,5 @@ export class Player implements IPlayer {
   data: PlayerIdentification;
   boardId: string;
   socket: WebSocket;
-  hand?: Card[];
+  hand?: Hand;
 }

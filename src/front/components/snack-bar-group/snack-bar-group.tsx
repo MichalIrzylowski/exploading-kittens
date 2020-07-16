@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { SnackBar } from '@front/components/snack-bar';
 
@@ -31,16 +31,20 @@ export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
     }
   }, [props.snackPack, messageInfo, open]);
 
-  const handleClose = (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpen(false);
-  };
+  const handleClose = useCallback(
+    () => (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpen(false);
+    },
+    [setOpen]
+  );
 
-  const handleExited = () => {
-    setMessageInfo(undefined);
-  };
+  const handleExited = () =>
+    useCallback(() => {
+      setMessageInfo(undefined);
+    }, [setMessageInfo]);
 
   return (
     <SnackBar open={open} setClose={handleClose} onExited={handleExited} severity={messageInfo?.severity}>
