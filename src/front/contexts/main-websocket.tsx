@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ReconnectingWebsocket } from '@front/classes/reconnecting-websocket';
-import { sessionStorageItems } from '@front/shared/types';
 
 import { mainSocketRoute } from '@shared/urls';
 import { payloadTypes } from '@shared/payload-types';
@@ -13,7 +11,6 @@ import { useSnackBar } from './snack-bar-context';
 const WebsocketContext = React.createContext<ReconnectingWebsocket | null>(null);
 
 export const WebSocketProvider: React.FC = (props) => {
-  const history = useHistory();
   const setSnackBar = useSnackBar();
   const ws = new ReconnectingWebsocket(mainSocketRoute);
   ws._connect();
@@ -29,31 +26,6 @@ export const WebSocketProvider: React.FC = (props) => {
       ws.off(payloadTypes.snack, handleSnackMessage);
     };
   }, []);
-
-  const handleLeaveGame = () => {
-    const curentGame = sessionStorage.getItem(sessionStorageItems.currentGame);
-
-    if (curentGame) {
-      const playerId = sessionStorage.getItem(sessionStorageItems.user) as string;
-      const payload = {
-        playerId: JSON.parse(playerId).id,
-        boardId: curentGame,
-      };
-
-      ws.send(payloadTypes.leaveGame, payload);
-    }
-
-    sessionStorage.removeItem(sessionStorageItems.currentGame);
-  };
-
-  useEffect(() => {
-    const isPlaying = sessionStorage.getItem(sessionStorageItems.currentGame);
-    if (isPlaying) handleLeaveGame();
-
-    return () => {
-      handleLeaveGame();
-    };
-  }, [history.location.pathname]);
 
   return <WebsocketContext.Provider value={ws} {...props} />;
 };
