@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { SnackBar } from '@front/components/snack-bar';
 
@@ -31,11 +31,10 @@ export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
     }
   }, [props.snackPack, messageInfo, open]);
 
-  const handleClose = () => (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
+  const handleClose = (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    console.log('dupa');
     setOpen(false);
   };
 
