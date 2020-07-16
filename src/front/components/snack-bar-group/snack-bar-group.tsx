@@ -31,20 +31,17 @@ export const SnackBarGroup: React.FC<ISnackBarGroup> = (props) => {
     }
   }, [props.snackPack, messageInfo, open]);
 
-  const handleClose = useCallback(
-    () => (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
-      if (reason === 'clickaway') {
-        return;
-      }
-      setOpen(false);
-    },
-    [setOpen]
-  );
+  const handleClose = () => (event?: React.SyntheticEvent | MouseEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    console.log('dupa');
+    setOpen(false);
+  };
 
-  const handleExited = () =>
-    useCallback(() => {
-      setMessageInfo(undefined);
-    }, [setMessageInfo]);
+  const handleExited = () => {
+    setMessageInfo(undefined);
+  };
 
   return (
     <SnackBar open={open} setClose={handleClose} onExited={handleExited} severity={messageInfo?.severity}>

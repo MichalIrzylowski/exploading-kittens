@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useRouteMatch, Route, Switch } from 'react-router-dom';
 
 import { useWebSocket } from '@front/contexts/main-websocket';
 import { sessionStorageItems } from '@front/shared/types';
 import { LayoutWrapper } from '@front/components/layout-wrapper';
+import { ProcessSteps } from '@front/components/process-steps';
 
 import { payloadTypes } from '@shared/payload-types';
 import { _new, id, homePage } from '@shared/urls';
 
 import { BoardCreator } from './board-creator';
 import { Board } from './board';
+
+const steps = [
+  { processStep: <BoardCreator />, route: _new },
+  { processStep: <Board />, route: id },
+];
 
 export const Game = () => {
   const history = useHistory();
@@ -52,14 +58,7 @@ export const Game = () => {
   return (
     <main>
       <LayoutWrapper>
-        <Switch>
-          <Route path={match.path + _new}>
-            <BoardCreator />
-          </Route>
-          <Route path={match.path + id}>
-            <Board />
-          </Route>
-        </Switch>
+        <ProcessSteps steps={steps} />
       </LayoutWrapper>
     </main>
   );
