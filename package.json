@@ -68,6 +68,6 @@
     "typography": "^0.16.19",
     "typography-theme-ocean-beach": "^0.16.19",
     "uuid": "^8.0.0",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   }
 }
